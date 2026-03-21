@@ -32,6 +32,7 @@ import {
   MessageCircle,
   Send,
   Check,
+  Trash2,
 } from 'lucide-react';
 
 function formatDate(dateStr: string) {
@@ -51,7 +52,9 @@ export default function IssueDetailPage() {
   const [issue, setIssue] = useState<Issue | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   // Hooks must be called unconditionally (before early returns)
   const issueCoords = issue?.location?.coordinates;
@@ -115,6 +118,8 @@ export default function IssueDetailPage() {
   const urgency = getUrgencyConfig(issue.urgency);
   const [lng, lat] = issue.location?.coordinates ?? [0, 0];
 
+  const canDelete = user && (user.id === issue.author_id || profile?.role === 'admin');
+
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -122,6 +127,18 @@ export default function IssueDetailPage() {
     } else {
       await navigator.clipboard.writeText(url);
       alert('Link copied to clipboard!');
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!canDelete) return;
+    setDeleting(true);
+    const { error } = await supabase.from('issues').delete().eq('id', issue.id);
+    if (!error) {
+      router.push('/map');
+    } else {
+      setDeleting(false);
+      setConfirmDelete(false);
     }
   };
 
@@ -144,6 +161,33 @@ export default function IssueDetailPage() {
           >
             <Share2 className="w-4 h-4" />
           </button>
+          {canDelete && (
+            confirmDelete ? (
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="text-xs font-medium bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60"
+                >
+                  {deleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Confirm Delete'}
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="text-xs text-gray-400 hover:text-white px-2 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                title="Delete issue"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )
+          )}
         </div>
 
         {/* Title + tags */}

@@ -48,6 +48,9 @@ CREATE POLICY "Anyone can view issues" ON issues FOR SELECT USING (true);
 CREATE POLICY "Authenticated users can create issues" ON issues FOR INSERT WITH CHECK (auth.uid() = author_id);
 CREATE POLICY "Authors can update own issues" ON issues FOR UPDATE USING (auth.uid() = author_id);
 CREATE POLICY "Authors can delete own issues" ON issues FOR DELETE USING (auth.uid() = author_id);
+CREATE POLICY "Admins can delete any issue" ON issues FOR DELETE USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
 -- Admin/official can update any issue status
 CREATE POLICY "Officials can update issue status" ON issues FOR UPDATE USING (
   EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role IN ('official', 'admin'))

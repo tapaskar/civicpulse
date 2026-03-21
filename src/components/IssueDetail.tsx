@@ -14,6 +14,7 @@ import { composeTweetUrl } from '@/lib/social';
 import { useEmailAuthority } from '@/hooks/useEmailAuthority';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthoritiesNotified } from './AuthoritiesNotified';
+import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   MapPin,
@@ -30,6 +31,7 @@ import {
   Send,
   Loader2,
   Check,
+  Trash2,
 } from 'lucide-react';
 
 function formatDate(dateStr: string) {
@@ -74,7 +76,10 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
       });
   }, [initialIssue.id]);
 
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const router = useRouter();
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const category = getCategoryConfig(issue.category);
   const status = getStatusConfig(issue.status);
   const urgency = getUrgencyConfig(issue.urgency);
@@ -92,12 +97,26 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
 
   const issueUrl = typeof window !== 'undefined' ? `${window.location.origin}/issue/${issue.id}` : '';
 
+  const canDelete = user && (user.id === issue.author_id || profile?.role === 'admin');
+
   const handleShare = async () => {
     const url = `${window.location.origin}/issue/${issue.id}`;
     if (navigator.share) {
       await navigator.share({ title: issue.title, url });
     } else {
       await navigator.clipboard.writeText(url);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!canDelete) return;
+    setDeleting(true);
+    const { error } = await supabase.from('issues').delete().eq('id', issue.id);
+    if (!error) {
+      onBack();
+    } else {
+      setDeleting(false);
+      setConfirmDelete(false);
     }
   };
 
@@ -119,6 +138,33 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
         >
           <Share2 className="w-3.5 h-3.5" />
         </button>
+        {canDelete && (
+          confirmDelete ? (
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="text-[11px] font-medium bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded-lg transition-colors disabled:opacity-60"
+              >
+                {deleting ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Confirm'}
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="text-[11px] text-gray-400 hover:text-white px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="text-gray-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all"
+              title="Delete issue"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          )
+        )}
       </div>
 
       {/* Content */}
