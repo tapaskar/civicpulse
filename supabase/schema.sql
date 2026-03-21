@@ -71,6 +71,23 @@ CREATE POLICY "Authenticated users can create comments" ON comments FOR INSERT W
 CREATE POLICY "Authors can update own comments" ON comments FOR UPDATE USING (auth.uid() = author_id);
 CREATE POLICY "Authors can delete own comments" ON comments FOR DELETE USING (auth.uid() = author_id);
 
+-- Comment Reactions (Slack-style emoji reactions)
+CREATE TABLE comment_reactions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  comment_id UUID NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  emoji TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (comment_id, user_id, emoji)
+);
+
+CREATE INDEX comment_reactions_comment_idx ON comment_reactions (comment_id);
+
+ALTER TABLE comment_reactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view reactions" ON comment_reactions FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can add reactions" ON comment_reactions FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can remove own reactions" ON comment_reactions FOR DELETE USING (auth.uid() = user_id);
+
 -- Upvotes (unique per user per issue)
 CREATE TABLE upvotes (
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,

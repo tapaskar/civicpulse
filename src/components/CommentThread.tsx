@@ -1,16 +1,32 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import type { Comment } from '@/lib/types';
-import { Send, Loader2, Shield, Smile, Pencil, Trash2, X, Check } from 'lucide-react';
+import { Send, Loader2, Shield, Smile, Pencil, Trash2, X, Check, Plus } from 'lucide-react';
 
 const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
   { label: 'Common', emojis: ['👍', '👎', '❤️', '🔥', '👏', '😢', '😡', '🙏', '💯', '⚠️', '✅', '❌'] },
   { label: 'Civic', emojis: ['🚧', '🕳️', '💡', '💧', '🗑️', '🛣️', '🔊', '🚨', '🏗️', '🚦', '🌳', '🚰'] },
   { label: 'Reactions', emojis: ['😊', '😂', '🤔', '😮', '👀', '🎉', '💪', '🤝', '📸', '📍', '🗳️', '📢'] },
 ];
+
+const QUICK_REACTIONS = ['👍', '❤️', '🔥', '😂', '😢', '👏'];
+
+interface ReactionRow {
+  id: string;
+  comment_id: string;
+  user_id: string;
+  emoji: string;
+}
+
+// Grouped reaction: emoji → count + whether current user reacted
+interface GroupedReaction {
+  emoji: string;
+  count: number;
+  userReacted: boolean;
+}
 
 interface CommentThreadProps {
   issueId: string;
@@ -31,22 +47,43 @@ export function CommentThread({ issueId }: CommentThreadProps) {
   const { user, profile } = useAuth();
   const supabase = createClient();
   const [comments, setComments] = useState<Comment[]>([]);
+  const [reactions, setReactions] = useState<Map<string, ReactionRow[]>>(new Map());
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [reactionPickerFor, setReactionPickerFor] = useState<string | null>(null);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const { data } = await supabase
       .from('comments')
       .select('*, author:profiles!author_id(*)')
       .eq('issue_id', issueId)
       .order('created_at', { ascending: true });
-    if (data) setComments(data);
+    if (data) {
+      setComments(data);
+      // Fetch reactions for all comments
+      const commentIds = data.map((c: Comment) => c.id);
+      if (commentIds.length > 0) {
+        const { data: rxns } = await supabase
+          .from('comment_reactions')
+          .select('*')
+          .in('comment_id', commentIds);
+        if (rxns) {
+          const map = new Map<string, ReactionRow[]>();
+          for (const r of rxns as ReactionRow[]) {
+            const arr = map.get(r.comment_id) || [];
+            arr.push(r);
+            map.set(r.comment_id, arr);
+          }
+          setReactions(map);
+        }
+      }
+    }
     setLoading(false);
-  };
+  }, [issueId, supabase]);
 
   useEffect(() => {
     fetchComments();
@@ -66,7 +103,7 @@ export function CommentThread({ issueId }: CommentThreadProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [issueId]);
+  }, [issueId, fetchComments]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,6 +153,52 @@ export function CommentThread({ issueId }: CommentThreadProps) {
     setDeletingId(null);
   };
 
+  const toggleReaction = async (commentId: string, emoji: string) => {
+    if (!user) return;
+
+    const commentReactions = reactions.get(commentId) || [];
+    const existing = commentReactions.find(r => r.user_id === user.id && r.emoji === emoji);
+
+    if (existing) {
+      // Remove reaction (optimistic)
+      setReactions(prev => {
+        const next = new Map(prev);
+        next.set(commentId, (next.get(commentId) || []).filter(r => r.id !== existing.id));
+        return next;
+      });
+      await supabase.from('comment_reactions').delete().eq('id', existing.id);
+    } else {
+      // Add reaction (optimistic)
+      const tempId = crypto.randomUUID();
+      const newReaction: ReactionRow = { id: tempId, comment_id: commentId, user_id: user.id, emoji };
+      setReactions(prev => {
+        const next = new Map(prev);
+        next.set(commentId, [...(next.get(commentId) || []), newReaction]);
+        return next;
+      });
+      await supabase.from('comment_reactions').insert({
+        comment_id: commentId,
+        user_id: user.id,
+        emoji,
+      });
+    }
+    setReactionPickerFor(null);
+  };
+
+  const getGroupedReactions = (commentId: string): GroupedReaction[] => {
+    const rows = reactions.get(commentId) || [];
+    const map = new Map<string, { count: number; userReacted: boolean }>();
+    for (const r of rows) {
+      const entry = map.get(r.emoji) || { count: 0, userReacted: false };
+      entry.count++;
+      if (r.user_id === user?.id) entry.userReacted = true;
+      map.set(r.emoji, entry);
+    }
+    return Array.from(map.entries()).map(([emoji, { count, userReacted }]) => ({
+      emoji, count, userReacted,
+    }));
+  };
+
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider">
@@ -133,11 +216,13 @@ export function CommentThread({ issueId }: CommentThreadProps) {
           {comments.map(comment => {
             const isOwn = user?.id === comment.author_id;
             const isEditing = editingId === comment.id;
+            const grouped = getGroupedReactions(comment.id);
+            const showPicker = reactionPickerFor === comment.id;
 
             return (
               <div
                 key={comment.id}
-                className={`p-3 rounded-lg border group ${
+                className={`p-3 rounded-lg border group relative ${
                   comment.is_official
                     ? 'bg-yellow-500/10 border-yellow-500/30'
                     : 'bg-gray-700/40 border-gray-600/40'
@@ -158,29 +243,43 @@ export function CommentThread({ issueId }: CommentThreadProps) {
                   <span className="text-[11px] text-gray-400 ml-auto">
                     {timeAgo(comment.created_at)}
                   </span>
-                  {isOwn && !isEditing && (
-                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Action buttons (edit/delete/react) — visible on hover */}
+                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {user && (
                       <button
-                        onClick={() => { setEditingId(comment.id); setEditText(comment.text); }}
-                        className="p-1 rounded text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
-                        title="Edit"
+                        onClick={() => setReactionPickerFor(showPicker ? null : comment.id)}
+                        className={`p-1 rounded transition-colors ${showPicker ? 'text-blue-400 bg-blue-500/10' : 'text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10'}`}
+                        title="React"
                       >
-                        <Pencil className="w-3 h-3" />
+                        <Smile className="w-3 h-3" />
                       </button>
-                      <button
-                        onClick={() => handleDelete(comment.id)}
-                        disabled={deletingId === comment.id}
-                        className="p-1 rounded text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-                        title="Delete"
-                      >
-                        {deletingId === comment.id
-                          ? <Loader2 className="w-3 h-3 animate-spin" />
-                          : <Trash2 className="w-3 h-3" />
-                        }
-                      </button>
-                    </div>
-                  )}
+                    )}
+                    {isOwn && !isEditing && (
+                      <>
+                        <button
+                          onClick={() => { setEditingId(comment.id); setEditText(comment.text); }}
+                          className="p-1 rounded text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+                          title="Edit"
+                        >
+                          <Pencil className="w-3 h-3" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(comment.id)}
+                          disabled={deletingId === comment.id}
+                          className="p-1 rounded text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          title="Delete"
+                        >
+                          {deletingId === comment.id
+                            ? <Loader2 className="w-3 h-3 animate-spin" />
+                            : <Trash2 className="w-3 h-3" />
+                          }
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
+
+                {/* Comment text or edit mode */}
                 {isEditing ? (
                   <div className="flex gap-2 mt-1">
                     <input
@@ -210,6 +309,47 @@ export function CommentThread({ issueId }: CommentThreadProps) {
                 ) : (
                   <p className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">{comment.text}</p>
                 )}
+
+                {/* Reaction pills (Slack-style) */}
+                {(grouped.length > 0 || (user && !isEditing)) && (
+                  <div className="flex flex-wrap items-center gap-1 mt-2">
+                    {grouped.map(r => (
+                      <button
+                        key={r.emoji}
+                        onClick={() => toggleReaction(comment.id, r.emoji)}
+                        disabled={!user}
+                        className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-md border transition-all ${
+                          r.userReacted
+                            ? 'bg-blue-500/15 border-blue-500/40 text-blue-300 hover:bg-blue-500/25'
+                            : 'bg-gray-700/60 border-gray-600/40 text-gray-300 hover:bg-gray-600/60'
+                        } ${!user ? 'cursor-default' : ''}`}
+                      >
+                        <span className="text-sm">{r.emoji}</span>
+                        <span className="font-medium">{r.count}</span>
+                      </button>
+                    ))}
+                    {/* Add reaction button */}
+                    {user && !isEditing && (
+                      <button
+                        onClick={() => setReactionPickerFor(showPicker ? null : comment.id)}
+                        className="inline-flex items-center justify-center w-6 h-6 rounded-md border border-dashed border-gray-600/50 text-gray-500 hover:text-gray-300 hover:border-gray-500 hover:bg-gray-700/40 transition-all opacity-0 group-hover:opacity-100"
+                        title="Add reaction"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Reaction picker popover */}
+                {showPicker && (
+                  <ReactionPicker
+                    quickEmojis={QUICK_REACTIONS}
+                    allGroups={EMOJI_GROUPS}
+                    onSelect={emoji => toggleReaction(comment.id, emoji)}
+                    onClose={() => setReactionPickerFor(null)}
+                  />
+                )}
               </div>
             );
           })}
@@ -231,6 +371,81 @@ export function CommentThread({ issueId }: CommentThreadProps) {
   );
 }
 
+/* ── Reaction Picker (Slack-style) ── */
+function ReactionPicker({
+  quickEmojis,
+  allGroups,
+  onSelect,
+  onClose,
+}: {
+  quickEmojis: string[];
+  allGroups: { label: string; emojis: string[] }[];
+  onSelect: (emoji: string) => void;
+  onClose: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  return (
+    <div
+      ref={ref}
+      className="absolute left-0 bottom-full mb-1 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50 animate-scale-in"
+    >
+      {!expanded ? (
+        <div className="flex items-center gap-0.5 p-1.5">
+          {quickEmojis.map(emoji => (
+            <button
+              key={emoji}
+              onClick={() => onSelect(emoji)}
+              className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-800 transition-colors text-lg"
+            >
+              {emoji}
+            </button>
+          ))}
+          <button
+            onClick={() => setExpanded(true)}
+            className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-300 border-l border-gray-700 ml-0.5 pl-0.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      ) : (
+        <div className="p-2 w-64 max-h-52 overflow-y-auto custom-scrollbar">
+          {allGroups.map(group => (
+            <div key={group.label} className="mb-2 last:mb-0">
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1 px-1">
+                {group.label}
+              </p>
+              <div className="grid grid-cols-6 gap-0.5">
+                {group.emojis.map(emoji => (
+                  <button
+                    key={emoji}
+                    onClick={() => onSelect(emoji)}
+                    className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-800 transition-colors text-base"
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Comment Input ── */
 function CommentInput({
   text,
   setText,
@@ -265,7 +480,6 @@ function CommentInput({
       const end = input.selectionEnd ?? text.length;
       const newText = text.slice(0, start) + emoji + text.slice(end);
       setText(newText);
-      // Restore cursor position after emoji
       requestAnimationFrame(() => {
         input.focus();
         const pos = start + emoji.length;
