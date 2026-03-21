@@ -32,9 +32,9 @@ export function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/map" className={`text-sm px-3 py-1.5 rounded-lg transition-all ${
+            <Link href="/map" className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-all ${
               isLanding
-                ? 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
                 : 'text-gray-400 hover:text-white hover:bg-white/5'
             }`}>
               Map
@@ -86,9 +86,9 @@ export function Navbar() {
             ) : (
               <button
                 onClick={() => setShowAuth(true)}
-                className={`text-sm px-4 py-1.5 rounded-lg transition-all ${
+                className={`text-sm font-medium px-4 py-1.5 rounded-lg transition-all ${
                   isLanding
-                    ? 'border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50'
+                    ? 'bg-indigo-600 text-white hover:bg-indigo-500'
                     : 'bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10'
                 }`}
               >
