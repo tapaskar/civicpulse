@@ -24,7 +24,7 @@ CREATE TABLE issues (
   title TEXT NOT NULL CHECK (char_length(title) <= 280),
   description TEXT,
   category TEXT NOT NULL CHECK (category IN (
-    'pothole', 'streetlight', 'water', 'garbage', 'road', 'noise', 'safety', 'other'
+    'pothole', 'streetlight', 'water', 'garbage', 'road', 'noise', 'safety', 'traffic', 'accident', 'other'
   )),
   urgency TEXT NOT NULL DEFAULT 'medium' CHECK (urgency IN ('low', 'medium', 'high', 'critical')),
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved')),
