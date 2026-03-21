@@ -182,68 +182,71 @@ export default function MapPage() {
           </div>
         )}
 
-        {/* Mobile toggle */}
-        <button
-          onClick={() => {
-            if (selectedIssue && showList) {
-              setSelectedIssue(null);
-              setShowList(false);
-            } else {
-              setShowList(!showList);
-            }
-          }}
-          className="md:hidden absolute bottom-20 left-1/2 -translate-x-1/2 glass glass-border text-white px-5 py-2.5 rounded-full shadow-xl flex items-center gap-2 text-sm z-10 transition-all active:scale-95"
-        >
-          {showList ? (
-            <><MapIcon className="w-4 h-4" /> Map</>
-          ) : (
-            <><List className="w-4 h-4" /> List ({issues.length})</>
-          )}
-        </button>
-
-        {/* Mobile FAB */}
-        {user && !showList && (
-          <button
-            onClick={openReport}
-            className="md:hidden absolute bottom-20 right-4 bg-blue-600 hover:bg-blue-500 text-white w-14 h-14 rounded-2xl shadow-lg shadow-blue-600/25 flex items-center justify-center z-10 transition-all active:scale-90"
-          >
-            <Plus className="w-6 h-6" />
-          </button>
-        )}
       </div>
 
-      {/* Mobile bottom sheet */}
-      {showList && (
-        <div className="md:hidden absolute bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-t border-gray-700 rounded-t-3xl max-h-[70vh] overflow-hidden z-20 flex flex-col animate-slide-up shadow-2xl">
-          <div className="w-10 h-1 bg-gray-700 rounded-full mx-auto mt-3 mb-1" />
-          {selectedIssue ? (
-            <IssueDetail
-              issue={selectedIssue}
-              onBack={() => setSelectedIssue(null)}
-            />
-          ) : (
-            <>
-              <FilterBar
-                filters={filters}
-                onChange={setFilters}
-                issues={issues}
-                onIssueSelect={handleSearchIssueSelect}
-                onLocationSelect={handleLocationSelect}
+      {/* Mobile bottom bar — always visible */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30">
+        {/* Bottom sheet */}
+        {showList && (
+          <div className="bg-gray-900/95 backdrop-blur-xl border-t border-gray-700 rounded-t-3xl max-h-[60vh] overflow-hidden flex flex-col animate-slide-up shadow-2xl">
+            {selectedIssue ? (
+              <IssueDetail
+                issue={selectedIssue}
+                onBack={() => setSelectedIssue(null)}
               />
-              <div className="flex-1 overflow-y-auto custom-scrollbar">
-                {issues.map(issue => (
-                  <IssueCard
-                    key={issue.id}
-                    issue={issue}
-                    selected={false}
-                    onClick={() => setSelectedIssue(issue)}
-                  />
-                ))}
-              </div>
-            </>
+            ) : (
+              <>
+                <FilterBar
+                  filters={filters}
+                  onChange={setFilters}
+                  issues={issues}
+                  onIssueSelect={handleSearchIssueSelect}
+                  onLocationSelect={handleLocationSelect}
+                />
+                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                  {issues.map(issue => (
+                    <IssueCard
+                      key={issue.id}
+                      issue={issue}
+                      selected={false}
+                      onClick={() => setSelectedIssue(issue)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Fixed toolbar at very bottom */}
+        <div className="flex items-center justify-center gap-3 px-4 py-3 bg-gray-900 border-t border-gray-800">
+          <button
+            onClick={() => {
+              if (selectedIssue && showList) {
+                setSelectedIssue(null);
+                setShowList(false);
+              } else {
+                setShowList(!showList);
+              }
+            }}
+            className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 py-2.5 rounded-xl transition-colors active:scale-95"
+          >
+            {showList ? (
+              <><MapIcon className="w-4 h-4" /> Show Map</>
+            ) : (
+              <><List className="w-4 h-4" /> Issues ({issues.length})</>
+            )}
+          </button>
+          {user && (
+            <button
+              onClick={openReport}
+              className="flex items-center justify-center gap-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 py-2.5 px-5 rounded-xl transition-colors active:scale-95 shadow-sm shadow-blue-600/20"
+            >
+              <Plus className="w-4 h-4" /> Report
+            </button>
           )}
         </div>
-      )}
+      </div>
 
       {/* Report modal */}
       {reportCoords && (
