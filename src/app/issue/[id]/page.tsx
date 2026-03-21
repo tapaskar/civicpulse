@@ -12,6 +12,9 @@ import { VotableTag } from '@/components/VotableTag';
 import type { Issue } from '@/lib/types';
 import { getAuthoritiesForLocation, getAuthorityForCategory } from '@/lib/authorities';
 import { useDistrictAuthority } from '@/hooks/useDistrictAuthority';
+import { composeTweetUrl } from '@/lib/social';
+import { useEmailAuthority } from '@/hooks/useEmailAuthority';
+import { useAuth } from '@/hooks/useAuth';
 import {
   ArrowLeft,
   MapPin,
@@ -26,6 +29,8 @@ import {
   Mail,
   Phone,
   MessageCircle,
+  Send,
+  Check,
 } from 'lucide-react';
 
 function formatDate(dateStr: string) {
@@ -45,12 +50,23 @@ export default function IssueDetailPage() {
   const [issue, setIssue] = useState<Issue | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const { user } = useAuth();
+
   // Hooks must be called unconditionally (before early returns)
   const issueCoords = issue?.location?.coordinates;
   const { authority: dm } = useDistrictAuthority(
     issueCoords ? issueCoords[1] : null,
     issueCoords ? issueCoords[0] : null,
   );
+
+  // Authority lookup (unconditional for hooks)
+  const city = issueCoords ? getAuthoritiesForLocation(issueCoords[0], issueCoords[1]) : null;
+  const authority = issue ? getAuthorityForCategory(city, issue.category) : null;
+  const deptEmail = authority?.email || '';
+  const dmEmail = dm?.email || '';
+
+  const { sendEmail: sendDeptEmail, sending: sendingDept, sent: sentDept } = useEmailAuthority(id, deptEmail);
+  const { sendEmail: sendDmEmail, sending: sendingDm, sent: sentDm } = useEmailAuthority(id, dmEmail);
 
   useEffect(() => {
     const fetchIssue = async () => {
@@ -175,60 +191,80 @@ export default function IssueDetailPage() {
         </div>
 
         {/* Responsible department */}
-        {(() => {
-          const city = getAuthoritiesForLocation(lng, lat);
-          const authority = getAuthorityForCategory(city, issue.category);
-          if (!authority) return null;
-          return (
-            <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4 space-y-2">
-              <div className="flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-blue-500" />
-                <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
-                  Responsible Department
-                </span>
-              </div>
-              <p className="text-sm font-medium text-gray-200">{authority.department}</p>
-              <div className="flex flex-wrap gap-1.5">
+        {authority && (
+          <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4 space-y-2">
+            <div className="flex items-center gap-1.5">
+              <Building2 className="w-3.5 h-3.5 text-blue-500" />
+              <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
+                Responsible Department
+              </span>
+            </div>
+            <p className="text-sm font-medium text-gray-200">{authority.department}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {authority.twitter && (
+                <a href={`https://x.com/${authority.twitter.replace('@', '')}`} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                  <Twitter className="w-3 h-3 text-sky-400" /> {authority.twitter}
+                </a>
+              )}
+              {authority.email && (
+                <a href={`mailto:${authority.email}`}
+                  className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                  <Mail className="w-3 h-3 text-amber-400" /> {authority.email}
+                </a>
+              )}
+              {authority.helpline && (
+                <a href={`tel:${authority.helpline.replace(/[^0-9+]/g, '')}`}
+                  className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                  <Phone className="w-3 h-3 text-green-400" /> {authority.helpline}
+                </a>
+              )}
+              {authority.whatsapp && (
+                <a href={`https://wa.me/91${authority.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                  <MessageCircle className="w-3 h-3 text-green-500" /> WA {authority.whatsapp}
+                </a>
+              )}
+              {authority.phone && !authority.helpline && (
+                <a href={`tel:${authority.phone.replace(/[^0-9+]/g, '')}`}
+                  className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                  <Phone className="w-3 h-3 text-green-400" /> {authority.phone}
+                </a>
+              )}
+              {authority.website && (
+                <a href={authority.website} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
+                  <ExternalLink className="w-3 h-3 text-gray-400" /> Portal
+                </a>
+              )}
+            </div>
+            {/* Action buttons */}
+            {user && (authority.twitter || authority.email) && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-blue-500/10">
                 {authority.twitter && (
-                  <a href={`https://x.com/${authority.twitter.replace('@', '')}`} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <Twitter className="w-3 h-3 text-sky-400" /> {authority.twitter}
+                  <a
+                    href={composeTweetUrl({ title: issue.title, category: getCategoryConfig(issue.category).label, address: issue.address, twitterHandle: authority.twitter, issueUrl: window.location.href })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    <Twitter className="w-3.5 h-3.5" /> Tweet this Issue
                   </a>
                 )}
                 {authority.email && (
-                  <a href={`mailto:${authority.email}`}
-                    className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <Mail className="w-3 h-3 text-amber-400" /> {authority.email}
-                  </a>
-                )}
-                {authority.helpline && (
-                  <a href={`tel:${authority.helpline.replace(/[^0-9+]/g, '')}`}
-                    className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <Phone className="w-3 h-3 text-green-400" /> {authority.helpline}
-                  </a>
-                )}
-                {authority.whatsapp && (
-                  <a href={`https://wa.me/91${authority.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <MessageCircle className="w-3 h-3 text-green-500" /> WA {authority.whatsapp}
-                  </a>
-                )}
-                {authority.phone && !authority.helpline && (
-                  <a href={`tel:${authority.phone.replace(/[^0-9+]/g, '')}`}
-                    className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <Phone className="w-3 h-3 text-green-400" /> {authority.phone}
-                  </a>
-                )}
-                {authority.website && (
-                  <a href={authority.website} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-gray-300 bg-gray-800 px-2.5 py-1 rounded-full hover:bg-gray-700 transition-colors">
-                    <ExternalLink className="w-3 h-3 text-gray-400" /> Portal
-                  </a>
+                  <button
+                    onClick={() => sendDeptEmail(authority.department)}
+                    disabled={sendingDept || sentDept}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {sendingDept ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : sentDept ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                    {sentDept ? 'Email Sent' : 'Email Authority'}
+                  </button>
                 )}
               </div>
-            </div>
-          );
-        })()}
+            )}
+          </div>
+        )}
 
         {/* District Magistrate / Collector */}
         {dm && (
@@ -270,6 +306,19 @@ export default function IssueDetailPage() {
                 <Phone className="w-3 h-3 text-red-400" /> {dm.helpline}
               </a>
             </div>
+            {/* DM action buttons */}
+            {user && dm.email && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-amber-500/10">
+                <button
+                  onClick={() => sendDmEmail(`${dm.title}, ${dm.district}`)}
+                  disabled={sendingDm || sentDm}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sendingDm ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : sentDm ? <Check className="w-3.5 h-3.5" /> : <Send className="w-3.5 h-3.5" />}
+                  {sentDm ? 'Email Sent' : `Email ${dm.title}`}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
