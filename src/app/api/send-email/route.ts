@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const ses = new SESClient({
+  region: process.env.AWS_SES_REGION || process.env.AWS_REGION || 'ap-south-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+const SES_FROM_EMAIL = process.env.SES_FROM_EMAIL || 'noreply@civicpulse.in';
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://civicpulse-pi.vercel.app';
 const MAX_EMAILS_PER_ISSUE = 3;
 
 export async function POST(request: NextRequest) {
-  if (!RESEND_API_KEY) {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
     return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
   }
 
@@ -85,27 +94,19 @@ export async function POST(request: NextRequest) {
   </div>
 </div>`.trim();
 
-    // Send via Resend API
-    const resendRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
+    // Send via Amazon SES
+    const command = new SendEmailCommand({
+      Source: SES_FROM_EMAIL,
+      Destination: { ToAddresses: [recipientEmail] },
+      Message: {
+        Subject: { Data: subject, Charset: 'UTF-8' },
+        Body: {
+          Html: { Data: htmlBody, Charset: 'UTF-8' },
+        },
       },
-      body: JSON.stringify({
-        from: 'CivicPulse <onboarding@resend.dev>',
-        to: [recipientEmail],
-        subject,
-        html: htmlBody,
-      }),
     });
 
-    const resendData = await resendRes.json();
-
-    if (!resendRes.ok) {
-      console.error('Resend API error:', resendData);
-      return NextResponse.json({ error: 'Failed to send email' }, { status: 502 });
-    }
+    const sesResponse = await ses.send(command);
 
     // Record in DB
     await supabase.from('authority_emails').insert({
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
       status: 'sent',
     });
 
-    return NextResponse.json({ success: true, emailId: resendData.id });
+    return NextResponse.json({ success: true, messageId: sesResponse.MessageId });
   } catch (err: unknown) {
     console.error('Send email error:', err);
     return NextResponse.json({ error: 'Internal error' }, { status: 500 });
