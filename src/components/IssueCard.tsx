@@ -31,10 +31,10 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-3.5 border-b border-white/5 transition-all duration-200 group ${
+      className={`w-full text-left p-3.5 border-b border-gray-800 transition-all duration-200 group ${
         selected
           ? 'bg-blue-500/10 border-l-2 border-l-blue-500'
-          : 'hover:bg-white/[0.03]'
+          : 'hover:bg-gray-800/50'
       }`}
     >
       <div className="flex items-start gap-3">

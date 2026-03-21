@@ -80,7 +80,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
   const showDropdown = focused && query.length >= 2 && (issueMatches.length > 0 || locationResults.length > 0 || searching);
 
   return (
-    <div className="p-3 space-y-3 border-b border-white/5">
+    <div className="p-3 space-y-3 border-b border-gray-800">
       {/* Search */}
       <div className="relative" ref={wrapperRef}>
         <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-gray-600" />
@@ -90,7 +90,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
           value={query}
           onChange={e => handleInputChange(e.target.value)}
           onFocus={() => setFocused(true)}
-          className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-8 py-2 text-sm text-white placeholder-gray-600 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none transition-all"
+          className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-10 pr-8 py-2 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none transition-all"
         />
         {query && (
           <button
@@ -107,7 +107,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
 
         {/* Dropdown */}
         {showDropdown && (
-          <div className="absolute top-full left-0 right-0 mt-1.5 glass border border-white/10 rounded-xl shadow-2xl z-50 max-h-72 overflow-y-auto animate-scale-in custom-scrollbar">
+          <div className="absolute top-full left-0 right-0 mt-1.5 bg-gray-850 border border-gray-700 rounded-xl shadow-2xl z-50 max-h-72 overflow-y-auto animate-scale-in custom-scrollbar" style={{ backgroundColor: '#1e2433' }}>
             {/* Issue results */}
             {issueMatches.length > 0 && (
               <div>
@@ -186,7 +186,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
         <select
           value={filters.category ?? ''}
           onChange={e => update({ category: (e.target.value || undefined) as any })}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
+          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-gray-300 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-gray-750"
         >
           <option value="">All Categories</option>
           {CATEGORIES.map(c => (
@@ -197,7 +197,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
         <select
           value={filters.status ?? ''}
           onChange={e => update({ status: (e.target.value || undefined) as any })}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
+          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-gray-300 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-gray-750"
         >
           <option value="">All Statuses</option>
           {STATUS_OPTIONS.map(s => (
@@ -208,7 +208,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
         <select
           value={filters.urgency ?? ''}
           onChange={e => update({ urgency: (e.target.value || undefined) as any })}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
+          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-gray-300 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-gray-750"
         >
           <option value="">All Urgency</option>
           {URGENCY_LEVELS.map(u => (

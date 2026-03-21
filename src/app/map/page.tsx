@@ -105,7 +105,7 @@ export default function MapPage() {
   return (
     <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
       {/* Desktop side panel */}
-      <div className="hidden md:flex flex-col w-96 bg-gray-950/95 backdrop-blur-sm border-r border-white/5 overflow-hidden">
+      <div className="hidden md:flex flex-col w-96 bg-gray-900 border-r border-gray-800 overflow-hidden">
         {selectedIssue ? (
           <IssueDetail
             issue={selectedIssue}
@@ -121,7 +121,7 @@ export default function MapPage() {
               onLocationSelect={handleLocationSelect}
             />
 
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800">
               <span className="text-xs text-gray-500 font-medium">
                 {loading ? (
                   <span className="flex items-center gap-1.5">
@@ -214,7 +214,7 @@ export default function MapPage() {
 
       {/* Mobile bottom sheet */}
       {showList && (
-        <div className="md:hidden absolute bottom-0 left-0 right-0 bg-gray-950/95 backdrop-blur-xl border-t border-white/10 rounded-t-3xl max-h-[70vh] overflow-hidden z-20 flex flex-col animate-slide-up shadow-2xl">
+        <div className="md:hidden absolute bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-t border-gray-700 rounded-t-3xl max-h-[70vh] overflow-hidden z-20 flex flex-col animate-slide-up shadow-2xl">
           <div className="w-10 h-1 bg-gray-700 rounded-full mx-auto mt-3 mb-1" />
           {selectedIssue ? (
             <IssueDetail
