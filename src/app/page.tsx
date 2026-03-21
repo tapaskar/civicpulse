@@ -5,28 +5,28 @@ import { MapPin, Camera, Users, BarChart3, ArrowRight, Zap, Shield, Globe } from
 
 const FEATURES = [
   {
-    icon: <Camera className="w-6 h-6" />,
+    icon: <Camera className="w-5 h-5" />,
     title: 'Snap & Report',
     desc: 'Upload a photo — AI detects the issue type, severity, and fills everything automatically.',
-    color: 'from-violet-500 to-purple-600',
+    accent: 'bg-orange-50 text-orange-600',
   },
   {
-    icon: <Users className="w-6 h-6" />,
+    icon: <Users className="w-5 h-5" />,
     title: 'Community Voting',
     desc: 'Citizens vote on severity and status. Consensus drives the official tag — democracy in action.',
-    color: 'from-amber-500 to-orange-600',
+    accent: 'bg-violet-50 text-violet-600',
   },
   {
-    icon: <Globe className="w-6 h-6" />,
+    icon: <Globe className="w-5 h-5" />,
     title: 'Authority Lookup',
     desc: 'Instantly see the responsible DM, Collector, or department with their email, phone & Twitter.',
-    color: 'from-sky-500 to-blue-600',
+    accent: 'bg-teal-50 text-teal-600',
   },
   {
-    icon: <BarChart3 className="w-6 h-6" />,
+    icon: <BarChart3 className="w-5 h-5" />,
     title: 'Track Progress',
     desc: 'Real-time updates as issues get noticed, addressed, and resolved. Full transparency.',
-    color: 'from-rose-500 to-pink-600',
+    accent: 'bg-rose-50 text-rose-600',
   },
 ];
 
@@ -39,48 +39,35 @@ const STATS = [
 
 export default function Home() {
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto bg-white">
       {/* Hero */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-gray-950 to-slate-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.12),transparent_50%)]" />
+      <section className="relative min-h-[85vh] flex items-center justify-center px-6">
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white" />
 
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }}
-        />
-
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-xs text-gray-300 font-medium">Live — Tracking civic issues across India</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 mb-8 animate-fade-in">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-xs text-slate-600 font-medium">Live — Tracking civic issues across India</span>
           </div>
 
           {/* Heading */}
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <span className="text-white">Your City.</span>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            Your City.
             <br />
-            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              Your Voice.
-            </span>
+            <span className="text-indigo-600">Your Voice.</span>
           </h1>
 
-          <p className="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="mt-6 text-lg md:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
             Report potholes, broken streetlights, water leaks, and more on an interactive map.
-            AI analyzes your photos. Communities vote on priority. Authorities are held accountable.
+            AI analyzes your photos. Communities vote on priority.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Link
               href="/map"
-              className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 hover:-translate-y-0.5"
+              className="group flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-3.5 rounded-full font-semibold text-lg transition-all duration-200 hover:-translate-y-0.5"
             >
               <MapPin className="w-5 h-5" />
               Open Map
@@ -88,19 +75,19 @@ export default function Home() {
             </Link>
             <Link
               href="/map"
-              className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:text-white px-8 py-3.5 rounded-xl font-medium text-lg transition-all duration-200 hover:bg-white/10 hover:-translate-y-0.5"
+              className="flex items-center gap-2 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 px-8 py-3.5 rounded-full font-medium text-lg transition-all duration-200 hover:-translate-y-0.5"
             >
-              <Zap className="w-5 h-5 text-amber-400" />
+              <Zap className="w-5 h-5 text-amber-500" />
               Report an Issue
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 animate-fade-in" style={{ animationDelay: '0.5s' }}>
             {STATS.map(s => (
               <div key={s.label} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-white">{s.value}</div>
-                <div className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{s.label}</div>
+                <div className="text-2xl md:text-3xl font-bold text-slate-900">{s.value}</div>
+                <div className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-medium">{s.label}</div>
               </div>
             ))}
           </div>
@@ -108,30 +95,29 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="relative py-24 px-6">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/50 to-transparent" />
-        <div className="relative max-w-5xl mx-auto">
+      <section className="py-24 px-6 bg-slate-50/50">
+        <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Built for <span className="text-blue-400">impact</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+              How it works
             </h2>
-            <p className="mt-3 text-gray-400 max-w-xl mx-auto">
+            <p className="mt-3 text-slate-500 max-w-xl mx-auto">
               Every feature designed to make civic reporting effortless and accountability automatic.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-5">
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className="group bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 animate-slide-up"
+                className="group bg-white border border-slate-100 rounded-2xl p-6 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-100 transition-all duration-300 animate-slide-up"
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform`}>
+                <div className={`w-10 h-10 rounded-lg ${f.accent} flex items-center justify-center mb-4`}>
                   {f.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{f.title}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{f.desc}</p>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">{f.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -139,18 +125,20 @@ export default function Home() {
       </section>
 
       {/* CTA Bottom */}
-      <section className="relative py-24 px-6">
-        <div className="relative max-w-2xl mx-auto text-center">
-          <Shield className="w-12 h-12 text-blue-500/40 mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <section className="py-24 px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-6">
+            <Shield className="w-7 h-7 text-indigo-600" />
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             Hold your city accountable
           </h2>
-          <p className="text-gray-400 mb-8">
+          <p className="text-slate-500 mb-8">
             Join thousands of citizens making their neighborhoods better, one report at a time.
           </p>
           <Link
             href="/map"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-3.5 rounded-full font-semibold text-lg transition-all duration-200 hover:-translate-y-0.5"
           >
             Get Started <ArrowRight className="w-5 h-5" />
           </Link>
@@ -158,8 +146,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800/50 py-8 px-6 text-center">
-        <p className="text-xs text-gray-600">
+      <footer className="border-t border-slate-100 py-8 px-6 text-center">
+        <p className="text-xs text-slate-400">
           CivicPulse — Open-source civic issue tracker for India
         </p>
       </footer>
