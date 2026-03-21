@@ -120,7 +120,7 @@ export function VotableTag({
                   </div>
                 )}
                 {isMyVote && (
-                  <span className="text-[9px] text-emerald-400 font-semibold ml-0.5">YOU</span>
+                  <span className="text-[9px] text-blue-400 font-semibold ml-0.5">YOU</span>
                 )}
               </button>
             );

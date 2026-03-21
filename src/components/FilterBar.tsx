@@ -90,7 +90,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
           value={query}
           onChange={e => handleInputChange(e.target.value)}
           onFocus={() => setFocused(true)}
-          className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-8 py-2 text-sm text-white placeholder-gray-600 focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/40 outline-none transition-all"
+          className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-8 py-2 text-sm text-white placeholder-gray-600 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/40 outline-none transition-all"
         />
         {query && (
           <button
@@ -170,7 +170,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
                       }}
                       className="w-full flex items-start gap-2.5 px-3.5 py-2.5 text-left hover:bg-white/5 transition-colors"
                     >
-                      <MapPin className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                      <MapPin className="w-3.5 h-3.5 text-blue-400 mt-0.5 shrink-0" />
                       <p className="text-sm text-gray-300 line-clamp-2">{loc.display_name}</p>
                     </button>
                   ))
@@ -186,7 +186,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
         <select
           value={filters.category ?? ''}
           onChange={e => update({ category: (e.target.value || undefined) as any })}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
+          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
         >
           <option value="">All Categories</option>
           {CATEGORIES.map(c => (
@@ -197,7 +197,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
         <select
           value={filters.status ?? ''}
           onChange={e => update({ status: (e.target.value || undefined) as any })}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
+          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
         >
           <option value="">All Statuses</option>
           {STATUS_OPTIONS.map(s => (
@@ -208,7 +208,7 @@ export function FilterBar({ filters, onChange, issues = [], onIssueSelect, onLoc
         <select
           value={filters.urgency ?? ''}
           onChange={e => update({ urgency: (e.target.value || undefined) as any })}
-          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
+          className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-gray-400 outline-none focus:ring-1 focus:ring-blue-500/40 transition-all appearance-none cursor-pointer hover:bg-white/8"
         >
           <option value="">All Urgency</option>
           {URGENCY_LEVELS.map(u => (

@@ -77,7 +77,7 @@ export default function IssueDetailPage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
       </div>
     );
   }
@@ -86,7 +86,7 @@ export default function IssueDetailPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8">
         <p className="text-gray-400">Issue not found.</p>
-        <Link href="/map" className="text-emerald-400 hover:text-emerald-300 text-sm">
+        <Link href="/map" className="text-blue-400 hover:text-blue-300 text-sm">
           Back to map
         </Link>
       </div>
@@ -180,10 +180,10 @@ export default function IssueDetailPage() {
           const authority = getAuthorityForCategory(city, issue.category);
           if (!authority) return null;
           return (
-            <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4 space-y-2">
+            <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4 space-y-2">
               <div className="flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+                <Building2 className="w-3.5 h-3.5 text-blue-500" />
+                <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
                   Responsible Department
                 </span>
               </div>
@@ -308,7 +308,7 @@ export default function IssueDetailPage() {
         {lat && lng ? (
           <Link
             href={`/map?lat=${lat}&lng=${lng}&zoom=16`}
-            className="flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300"
+            className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300"
           >
             <MapPin className="w-4 h-4" /> View on map
           </Link>

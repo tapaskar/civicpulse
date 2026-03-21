@@ -192,7 +192,7 @@ export function PhotoUpload({ photos, onChange, onFirstPhoto, onExifLocation, ma
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
-            className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-700 flex flex-col items-center justify-center text-gray-500 hover:border-emerald-500 hover:text-emerald-400 transition-colors"
+            className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-700 flex flex-col items-center justify-center text-gray-500 hover:border-blue-500 hover:text-blue-400 transition-colors"
           >
             {uploading ? (
               <Loader2 className="w-5 h-5 animate-spin" />

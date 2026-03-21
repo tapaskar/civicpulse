@@ -33,7 +33,7 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
       onClick={onClick}
       className={`w-full text-left p-3.5 border-b border-white/5 transition-all duration-200 group ${
         selected
-          ? 'bg-emerald-500/10 border-l-2 border-l-emerald-500'
+          ? 'bg-blue-500/10 border-l-2 border-l-blue-500'
           : 'hover:bg-white/[0.03]'
       }`}
     >
@@ -83,7 +83,7 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
         {/* Right side: upvotes + time */}
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           <span className={`flex items-center gap-0.5 text-xs font-medium ${
-            issue.upvote_count > 0 ? 'text-emerald-400' : 'text-gray-600'
+            issue.upvote_count > 0 ? 'text-blue-400' : 'text-gray-600'
           }`}>
             <ArrowUp className="w-3 h-3" />
             {issue.upvote_count}

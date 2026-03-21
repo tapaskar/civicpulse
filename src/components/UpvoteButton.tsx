@@ -68,7 +68,7 @@ export function UpvoteButton({ issueId, initialCount }: UpvoteButtonProps) {
       disabled={!user}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
         upvoted
-          ? 'bg-emerald-600 text-white'
+          ? 'bg-blue-600 text-white'
           : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
       } ${!user ? 'opacity-50 cursor-not-allowed' : ''}`}
     >

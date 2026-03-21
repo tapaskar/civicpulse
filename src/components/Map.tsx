@@ -236,8 +236,8 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, select
                 onMouseLeave={isSpiderfied ? handleSpiderMouseLeave : undefined}
                 className={`rounded-full border-2 flex items-center justify-center text-white text-xs font-bold shadow-lg cursor-pointer transition-all ${
                   isSpiderfied
-                    ? 'bg-emerald-700 border-emerald-300 ring-2 ring-emerald-400/40'
-                    : 'bg-emerald-600 border-emerald-400 hover:scale-110'
+                    ? 'bg-blue-700 border-blue-300 ring-2 ring-blue-400/40'
+                    : 'bg-blue-600 border-blue-400 hover:scale-110'
                 }`}
                 style={{ width: size, height: size }}
               >
@@ -389,7 +389,7 @@ function SpiderLine({
           y1={fromPx.y}
           x2={toPx.x}
           y2={toPx.y - 16}
-          stroke="rgba(16, 185, 129, 0.5)"
+          stroke="rgba(59, 130, 246, 0.5)"
           strokeWidth={1.5}
           strokeDasharray="4 3"
         />

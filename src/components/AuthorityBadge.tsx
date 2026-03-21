@@ -41,7 +41,7 @@ function AuthorityRow({ authority }: { authority: Authority }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-1.5">
-        <Building2 className="w-3 h-3 text-emerald-500 shrink-0" />
+        <Building2 className="w-3 h-3 text-blue-500 shrink-0" />
         <span className="text-xs font-medium text-gray-200">{authority.department}</span>
       </div>
       <div className="flex flex-wrap gap-1 pl-[18px]">
@@ -168,7 +168,7 @@ export function AuthorityBadge({ lng, lat }: AuthorityBadgeProps) {
   return (
     <div className="bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg shadow-lg p-2.5 space-y-2 max-w-xs">
       <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+        <span className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">
           {heading}
         </span>
       </div>

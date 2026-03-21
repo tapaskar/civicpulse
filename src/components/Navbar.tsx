@@ -17,11 +17,11 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition-shadow">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-600/15 group-hover:shadow-blue-500/30 transition-shadow">
               <MapPin className="w-4.5 h-4.5 text-white" />
             </div>
             <span className="font-bold text-lg text-white tracking-tight">
-              Civic<span className="text-emerald-400">Pulse</span>
+              Civic<span className="text-blue-400">Pulse</span>
             </span>
           </Link>
 
@@ -34,7 +34,7 @@ export function Navbar() {
             {user && (
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('open-report-modal'))}
-                className="flex items-center gap-1.5 text-sm bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-1.5 rounded-lg transition-all shadow-md shadow-emerald-500/15 hover:shadow-emerald-500/30"
+                className="flex items-center gap-1.5 text-sm bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg transition-colors shadow-sm shadow-blue-600/15"
               >
                 <Plus className="w-4 h-4" />
                 Report Issue
@@ -51,8 +51,8 @@ export function Navbar() {
             {loading ? null : user ? (
               <div className="flex items-center gap-3 ml-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center">
-                    <span className="text-xs font-semibold text-emerald-400">
+                  <div className="w-7 h-7 rounded-full bg-blue-500/15 border border-blue-500/25 flex items-center justify-center">
+                    <span className="text-xs font-semibold text-blue-400">
                       {(profile?.display_name || 'U')[0].toUpperCase()}
                     </span>
                   </div>
@@ -65,7 +65,7 @@ export function Navbar() {
             ) : (
               <button
                 onClick={() => setShowAuth(true)}
-                className="text-sm glass glass-border text-gray-300 hover:text-white px-4 py-1.5 rounded-lg transition-all hover:bg-white/5"
+                className="text-sm bg-white/5 border border-white/10 text-gray-300 hover:text-white px-4 py-1.5 rounded-lg transition-all hover:bg-white/10"
               >
                 Sign In
               </button>
@@ -80,14 +80,14 @@ export function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenu && (
-          <div className="md:hidden border-t border-white/5 bg-gray-900/95 backdrop-blur-xl px-4 py-3 space-y-1 animate-fade-in">
+          <div className="md:hidden border-t border-white/5 bg-gray-950/95 backdrop-blur-xl px-4 py-3 space-y-1 animate-fade-in">
             <Link href="/map" onClick={() => setMobileMenu(false)} className="block text-sm text-gray-300 hover:text-white py-2.5 px-3 rounded-lg hover:bg-white/5 transition-colors">
               Map
             </Link>
             {user && (
               <button
                 onClick={() => { window.dispatchEvent(new CustomEvent('open-report-modal')); setMobileMenu(false); }}
-                className="block w-full text-left text-sm text-emerald-400 py-2.5 px-3 rounded-lg hover:bg-emerald-500/10 transition-colors"
+                className="block w-full text-left text-sm text-blue-400 py-2.5 px-3 rounded-lg hover:bg-blue-500/10 transition-colors"
               >
                 + Report Issue
               </button>
@@ -102,7 +102,7 @@ export function Navbar() {
                 Sign Out ({profile?.display_name})
               </button>
             ) : (
-              <button onClick={() => { setShowAuth(true); setMobileMenu(false); }} className="block w-full text-left text-sm text-emerald-400 py-2.5 px-3 rounded-lg hover:bg-emerald-500/10 transition-colors">
+              <button onClick={() => { setShowAuth(true); setMobileMenu(false); }} className="block w-full text-left text-sm text-blue-400 py-2.5 px-3 rounded-lg hover:bg-blue-500/10 transition-colors">
                 Sign In
               </button>
             )}

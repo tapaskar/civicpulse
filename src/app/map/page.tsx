@@ -21,7 +21,7 @@ const Map = dynamic(() => import('@/components/Map').then(m => ({ default: m.Map
   loading: () => (
     <div className="flex-1 flex items-center justify-center bg-gray-950">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
         <span className="text-xs text-gray-600">Loading map...</span>
       </div>
     </div>
@@ -134,7 +134,7 @@ export default function MapPage() {
               {user && (
                 <button
                   onClick={openReport}
-                  className="flex items-center gap-1.5 text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3 py-1 rounded-lg transition-all shadow-sm shadow-emerald-500/20"
+                  className="flex items-center gap-1.5 text-xs bg-gradient-to-r bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg transition-all shadow-sm shadow-blue-600/15"
                 >
                   <Plus className="w-3 h-3" /> Report
                 </button>
@@ -152,8 +152,8 @@ export default function MapPage() {
               ))}
               {!loading && issues.length === 0 && (
                 <div className="p-8 text-center animate-fade-in">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                    <MapIcon className="w-7 h-7 text-emerald-500/50" />
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20 flex items-center justify-center mx-auto mb-4">
+                    <MapIcon className="w-7 h-7 text-blue-500/50" />
                   </div>
                   <p className="text-sm text-gray-500">No issues found in this area.</p>
                   <p className="text-xs text-gray-600 mt-1">Click on the map to report one!</p>
@@ -205,7 +205,7 @@ export default function MapPage() {
         {user && !showList && (
           <button
             onClick={openReport}
-            className="md:hidden absolute bottom-20 right-4 bg-gradient-to-br from-emerald-500 to-teal-600 text-white w-14 h-14 rounded-2xl shadow-lg shadow-emerald-500/30 flex items-center justify-center z-10 transition-all active:scale-90 hover:shadow-emerald-500/50"
+            className="md:hidden absolute bottom-20 right-4 bg-blue-600 hover:bg-blue-500 text-white w-14 h-14 rounded-2xl shadow-lg shadow-blue-600/25 flex items-center justify-center z-10 transition-all active:scale-90"
           >
             <Plus className="w-6 h-6" />
           </button>

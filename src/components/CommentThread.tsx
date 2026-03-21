@@ -197,13 +197,13 @@ function CommentInput({
             value={text}
             onChange={e => setText(e.target.value)}
             placeholder="Add a comment..."
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-4 pr-10 py-2 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+            className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-4 pr-10 py-2 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           />
           <button
             type="button"
             onClick={() => setShowEmoji(!showEmoji)}
             className={`absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded transition-colors ${
-              showEmoji ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
+              showEmoji ? 'text-blue-400' : 'text-gray-500 hover:text-gray-300'
             }`}
           >
             <Smile className="w-4 h-4" />
@@ -212,7 +212,7 @@ function CommentInput({
         <button
           type="submit"
           disabled={submitting || !text.trim()}
-          className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800 text-white px-4 py-2 rounded-lg transition-colors"
+          className="bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
         >
           {submitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />

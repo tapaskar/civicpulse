@@ -26,7 +26,7 @@ const FEATURES = [
     icon: <BarChart3 className="w-6 h-6" />,
     title: 'Track Progress',
     desc: 'Real-time updates as issues get noticed, addressed, and resolved. Full transparency.',
-    color: 'from-emerald-500 to-teal-600',
+    color: 'from-rose-500 to-pink-600',
   },
 ];
 
@@ -42,10 +42,9 @@ export default function Home() {
     <div className="flex-1 overflow-y-auto">
       {/* Hero */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Animated background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(139,92,246,0.1),transparent_50%)]" />
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-gray-950 to-slate-950" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.12),transparent_50%)]" />
 
         {/* Grid pattern */}
         <div
@@ -56,14 +55,10 @@ export default function Home() {
           }}
         />
 
-        {/* Floating orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] animate-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-[100px] animate-float" style={{ animationDelay: '1.5s' }} />
-
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass glass-border mb-8 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
             <span className="text-xs text-gray-300 font-medium">Live — Tracking civic issues across India</span>
           </div>
 
@@ -71,7 +66,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <span className="text-white">Your City.</span>
             <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
               Your Voice.
             </span>
           </h1>
@@ -85,7 +80,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Link
               href="/map"
-              className="group flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5"
+              className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 hover:-translate-y-0.5"
             >
               <MapPin className="w-5 h-5" />
               Open Map
@@ -93,7 +88,7 @@ export default function Home() {
             </Link>
             <Link
               href="/map"
-              className="flex items-center gap-2 glass glass-border text-gray-300 hover:text-white px-8 py-3.5 rounded-xl font-medium text-lg transition-all duration-300 hover:-translate-y-0.5"
+              className="flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 hover:text-white px-8 py-3.5 rounded-xl font-medium text-lg transition-all duration-200 hover:bg-white/10 hover:-translate-y-0.5"
             >
               <Zap className="w-5 h-5 text-amber-400" />
               Report an Issue
@@ -118,7 +113,7 @@ export default function Home() {
         <div className="relative max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Built for <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">impact</span>
+              Built for <span className="text-blue-400">impact</span>
             </h2>
             <p className="mt-3 text-gray-400 max-w-xl mx-auto">
               Every feature designed to make civic reporting effortless and accountability automatic.
@@ -129,7 +124,7 @@ export default function Home() {
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className="group glass glass-border rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 animate-slide-up"
+                className="group bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 hover:-translate-y-1 transition-all duration-300 animate-slide-up"
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform`}>
@@ -145,9 +140,8 @@ export default function Home() {
 
       {/* CTA Bottom */}
       <section className="relative py-24 px-6">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.08),transparent_70%)]" />
         <div className="relative max-w-2xl mx-auto text-center">
-          <Shield className="w-12 h-12 text-emerald-500/50 mx-auto mb-6" />
+          <Shield className="w-12 h-12 text-blue-500/40 mx-auto mb-6" />
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Hold your city accountable
           </h2>
@@ -156,7 +150,7 @@ export default function Home() {
           </p>
           <Link
             href="/map"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 hover:-translate-y-0.5"
           >
             Get Started <ArrowRight className="w-5 h-5" />
           </Link>

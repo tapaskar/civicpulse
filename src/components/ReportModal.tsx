@@ -21,7 +21,7 @@ export function ReportModal({ lat, lng, onClose }: ReportModalProps) {
       {/* Modal */}
       <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4 animate-scale-in custom-scrollbar">
         {/* Glow */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/15 to-teal-500/15 rounded-3xl blur-xl" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-3xl blur-xl" />
 
         <div className="relative bg-gray-900 border border-white/10 rounded-2xl shadow-2xl">
           <button

@@ -159,10 +159,10 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
             const authority = getAuthorityForCategory(city, issue.category);
             if (!authority) return null;
             return (
-              <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-3 space-y-1.5">
+              <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3 space-y-1.5">
                 <div className="flex items-center gap-1.5">
-                  <Building2 className="w-3 h-3 text-emerald-500" />
-                  <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">
+                  <Building2 className="w-3 h-3 text-blue-500" />
+                  <span className="text-[11px] font-semibold text-blue-400 uppercase tracking-wider">
                     Responsible Department
                   </span>
                 </div>

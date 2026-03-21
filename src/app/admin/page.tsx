@@ -113,7 +113,7 @@ export default function AdminPage() {
           <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
           <Link
             href="/admin/analytics"
-            className="flex items-center gap-1.5 text-sm text-emerald-400 hover:text-emerald-300"
+            className="flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300"
           >
             <BarChart3 className="w-4 h-4" /> Analytics
           </Link>
@@ -180,7 +180,7 @@ export default function AdminPage() {
               <button
                 onClick={handleBulkUpdate}
                 disabled={updating}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white text-sm px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1"
               >
                 {updating && <Loader2 className="w-3 h-3 animate-spin" />}
                 Apply
@@ -192,7 +192,7 @@ export default function AdminPage() {
         {/* Issue table */}
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
+            <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
           </div>
         ) : (
           <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
@@ -230,7 +230,7 @@ export default function AdminPage() {
                         />
                       </td>
                       <td className="p-3">
-                        <Link href={`/issue/${issue.id}`} className="text-white hover:text-emerald-400 font-medium">
+                        <Link href={`/issue/${issue.id}`} className="text-white hover:text-blue-400 font-medium">
                           {issue.title}
                         </Link>
                         {issue.address && (

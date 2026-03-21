@@ -124,7 +124,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
   if (authLoading) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
       </div>
     );
   }
@@ -137,7 +137,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
           <p className="mb-4">You need to sign in to report an issue.</p>
           <button
             onClick={() => setShowAuth(true)}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-medium transition-colors"
           >
             Sign In
           </button>
@@ -176,14 +176,14 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
 
       {/* AI analyzing indicator */}
       {analyzing && (
-        <div className="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2 text-sm text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-lg px-3 py-2">
           <Sparkles className="w-4 h-4 animate-pulse" />
           Analyzing photo to auto-fill details...
         </div>
       )}
 
       {aiFilled && !analyzing && (
-        <div className="flex items-center gap-2 text-xs text-emerald-400/70 px-1">
+        <div className="flex items-center gap-2 text-xs text-blue-400/70 px-1">
           <Sparkles className="w-3 h-3" />
           Fields auto-filled from photo. Review and edit if needed.
         </div>
@@ -200,7 +200,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
               onClick={() => { setCategory(c.value); setAiFilled(false); }}
               className={`flex flex-col items-center gap-1 p-3 rounded-lg border text-sm transition-colors ${
                 category === c.value
-                  ? 'border-emerald-500 bg-emerald-500/10 text-white'
+                  ? 'border-blue-500 bg-blue-500/10 text-white'
                   : 'border-gray-700 bg-gray-800 text-gray-400 hover:border-gray-600'
               }`}
             >
@@ -221,7 +221,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
           required
           maxLength={280}
           placeholder="Brief description of the issue"
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
         />
         <span className="text-xs text-gray-500 mt-1 block">{title.length}/280</span>
       </div>
@@ -234,7 +234,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
           onChange={e => { setDescription(e.target.value); setAiFilled(false); }}
           rows={3}
           placeholder="More details about the issue..."
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none resize-none"
+          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
         />
       </div>
 
@@ -268,7 +268,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
       <div>
         <label className="text-sm text-gray-400 mb-1 block">Location</label>
         <div className="flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5">
-          <MapPin className="w-4 h-4 text-emerald-500 shrink-0" />
+          <MapPin className="w-4 h-4 text-blue-500 shrink-0" />
           <span className="text-sm text-gray-300 truncate">
             {address || (lat && lng ? `${lat.toFixed(4)}, ${lng.toFixed(4)}` : 'Detecting location...')}
           </span>
@@ -287,7 +287,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
       <button
         type="submit"
         disabled={submitting || !title || analyzing}
-        className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800 disabled:text-gray-400 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+        className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-400 text-white py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
       >
         {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
         Submit Report
