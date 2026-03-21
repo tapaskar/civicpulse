@@ -101,6 +101,25 @@ CREATE POLICY "Anyone can view upvotes" ON upvotes FOR SELECT USING (true);
 CREATE POLICY "Users can manage own upvotes" ON upvotes FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can remove own upvotes" ON upvotes FOR DELETE USING (auth.uid() = user_id);
 
+-- Authority emails log (emails sent to government authorities about issues)
+CREATE TABLE authority_emails (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  issue_id UUID NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
+  sender_id UUID NOT NULL REFERENCES profiles(id),
+  recipient_email TEXT NOT NULL,
+  recipient_dept TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  body TEXT,
+  status TEXT NOT NULL DEFAULT 'sent',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX authority_emails_issue_idx ON authority_emails (issue_id);
+
+ALTER TABLE authority_emails ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view authority emails" ON authority_emails FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert authority emails" ON authority_emails FOR INSERT WITH CHECK (auth.uid() = sender_id);
+
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$

@@ -33,10 +33,12 @@ export interface Issue {
 export interface Comment {
   id: string;
   issue_id: string;
-  author_id: string;
+  author_id: string | null;
   text: string;
   is_official: boolean;
   created_at: string;
+  reply_from_email?: string | null;
+  reply_from_name?: string | null;
   // Joined
   author?: Profile;
 }

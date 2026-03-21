@@ -15,6 +15,7 @@ import { useDistrictAuthority } from '@/hooks/useDistrictAuthority';
 import { composeTweetUrl } from '@/lib/social';
 import { useEmailAuthority } from '@/hooks/useEmailAuthority';
 import { useAuth } from '@/hooks/useAuth';
+import { AuthoritiesNotified } from '@/components/AuthoritiesNotified';
 import {
   ArrowLeft,
   MapPin,
@@ -321,6 +322,9 @@ export default function IssueDetailPage() {
             )}
           </div>
         )}
+
+        {/* Authorities Notified */}
+        <AuthoritiesNotified issueId={issue.id} />
 
         {/* Photos */}
         {issue.photo_urls.length > 0 && (

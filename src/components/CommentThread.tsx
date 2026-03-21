@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import type { Comment } from '@/lib/types';
-import { Send, Loader2, Shield, Smile, Pencil, Trash2, X, Check, Plus } from 'lucide-react';
+import { Send, Loader2, Shield, Smile, Pencil, Trash2, X, Check, Plus, Mail } from 'lucide-react';
 
 const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
   { label: 'Common', emojis: ['👍', '👎', '❤️', '🔥', '👏', '😢', '😡', '🙏', '💯', '⚠️', '✅', '❌'] },
@@ -59,7 +59,7 @@ export function CommentThread({ issueId }: CommentThreadProps) {
   const fetchComments = useCallback(async () => {
     const { data } = await supabase
       .from('comments')
-      .select('*, author:profiles!author_id(*)')
+      .select('*, reply_from_email, reply_from_name, author:profiles!author_id(*)')
       .eq('issue_id', issueId)
       .order('created_at', { ascending: true });
     if (data) {
@@ -215,6 +215,13 @@ export function CommentThread({ issueId }: CommentThreadProps) {
         <div className="space-y-2">
           {comments.map(comment => {
             const isOwn = user?.id === comment.author_id;
+            const isAuthorityReply = !comment.author_id && !!comment.reply_from_email;
+            const displayName = isAuthorityReply
+              ? (comment.reply_from_name || comment.reply_from_email || 'Authority')
+              : (comment.author?.display_name ?? 'Anonymous');
+            const displayInitial = isAuthorityReply
+              ? (comment.reply_from_name?.[0]?.toUpperCase() ?? 'A')
+              : (comment.author?.display_name?.[0]?.toUpperCase() ?? '?');
             const isEditing = editingId === comment.id;
             const grouped = getGroupedReactions(comment.id);
             const showPicker = reactionPickerFor === comment.id;
@@ -223,19 +230,35 @@ export function CommentThread({ issueId }: CommentThreadProps) {
               <div
                 key={comment.id}
                 className={`p-3 rounded-lg border group relative ${
-                  comment.is_official
-                    ? 'bg-yellow-500/10 border-yellow-500/30'
-                    : 'bg-gray-700/40 border-gray-600/40'
+                  isAuthorityReply
+                    ? 'bg-green-500/10 border-green-500/30'
+                    : comment.is_official
+                      ? 'bg-yellow-500/10 border-yellow-500/30'
+                      : 'bg-gray-700/40 border-gray-600/40'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1.5">
-                  <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs text-white font-medium">
-                    {comment.author?.display_name?.[0]?.toUpperCase() ?? '?'}
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs text-white font-medium ${
+                    isAuthorityReply ? 'bg-green-600' : 'bg-gray-600'
+                  }`}>
+                    {isAuthorityReply ? <Mail className="w-3 h-3" /> : displayInitial}
                   </div>
-                  <span className="text-sm font-medium text-gray-200">
-                    {comment.author?.display_name ?? 'Anonymous'}
-                  </span>
-                  {comment.is_official && (
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-200">
+                      {displayName}
+                    </span>
+                    {isAuthorityReply && comment.reply_from_email && (
+                      <span className="text-[10px] text-gray-500">
+                        via {comment.reply_from_email}
+                      </span>
+                    )}
+                  </div>
+                  {isAuthorityReply && (
+                    <span className="flex items-center gap-1 text-[10px] font-medium bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full border border-green-500/30">
+                      <Mail className="w-3 h-3" /> Authority Reply
+                    </span>
+                  )}
+                  {comment.is_official && !isAuthorityReply && (
                     <span className="flex items-center gap-1 text-[10px] font-medium bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30">
                       <Shield className="w-3 h-3" /> Official
                     </span>
