@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background circle -->
+  <rect width="64" height="64" rx="16" fill="#4f46e5"/>
+
+  <!-- Body / shirt -->
+  <path d="M14 58c0-12 8-18 18-18s18 6 18 18" fill="#312e81"/>
+
+  <!-- Shirt collar V -->
+  <path d="M27 40l5 5 5-5" fill="#4338ca" stroke="#4338ca" stroke-width="0.5" stroke-linejoin="round"/>
+
+  <!-- Neck -->
+  <rect x="29" y="36" width="6" height="6" rx="2" fill="#f59e0b"/>
+
+  <!-- Face -->
+  <circle cx="32" cy="26" r="13" fill="#fbbf24"/>
+
+  <!-- Hair -->
+  <path d="M19 24c0-9 5.8-16 13-16s13 7 13 16c0 0-2-8-13-8S19 24 19 24z" fill="#1e293b"/>
+  <!-- Hair tuft -->
+  <path d="M28 9c2-2 5-1 6 0" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Glasses - thick round frames -->
+  <circle cx="26.5" cy="27" r="5.5" stroke="#1e293b" stroke-width="2.5" fill="rgba(219,234,254,0.3)"/>
+  <circle cx="37.5" cy="27" r="5.5" stroke="#1e293b" stroke-width="2.5" fill="rgba(219,234,254,0.3)"/>
+  <!-- Bridge -->
+  <path d="M32 27c0-1.5-1-2.5-2-2.5M32 27c0-1.5 1-2.5 2-2.5" stroke="#1e293b" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Temple arms -->
+  <line x1="21" y1="26" x2="19" y2="24.5" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
+  <line x1="43" y1="26" x2="45" y2="24.5" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Eyes (behind glasses) -->
+  <circle cx="26.5" cy="27.5" r="2" fill="#1e293b"/>
+  <circle cx="37.5" cy="27.5" r="2" fill="#1e293b"/>
+  <!-- Eye shine -->
+  <circle cx="27.5" cy="26.8" r="0.7" fill="white"/>
+  <circle cx="38.5" cy="26.8" r="0.7" fill="white"/>
+
+  <!-- Smile -->
+  <path d="M28 32.5c1.5 2 6.5 2 8 0" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+
+  <!-- ID Badge on lanyard -->
+  <line x1="32" y1="45" x2="32" y2="53" stroke="#a5b4fc" stroke-width="1.5"/>
+  <rect x="27.5" y="52" width="9" height="7" rx="1.5" fill="white" stroke="#c7d2fe" stroke-width="1"/>
+  <rect x="29.5" y="53.5" width="5" height="3" rx="0.5" fill="#e0e7ff"/>
+  <line x1="29.5" y1="58" x2="34.5" y2="58" stroke="#c7d2fe" stroke-width="0.8" stroke-linecap="round"/>
+</svg>
