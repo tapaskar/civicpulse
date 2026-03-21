@@ -97,7 +97,7 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
     setError('');
     setSubmitting(true);
 
-    const { error: insertError } = await supabase.from('issues').insert({
+    const { data: inserted, error: insertError } = await supabase.from('issues').insert({
       title,
       description: description || null,
       category,
@@ -106,13 +106,20 @@ export function ReportForm({ initialLat, initialLng, onClose }: ReportFormProps 
       address: address || null,
       photo_urls: photos,
       author_id: user.id,
-    });
+    }).select('id').single();
 
-    if (insertError) {
-      setError(insertError.message);
+    if (insertError || !inserted) {
+      setError(insertError?.message || 'Failed to create issue');
       setSubmitting(false);
       return;
     }
+
+    // Auto-notify relevant authorities (fire-and-forget)
+    fetch('/api/auto-notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ issueId: inserted.id, lng, lat, category, address }),
+    }).catch(() => {}); // Silent — don't block user
 
     if (onClose) {
       onClose();
