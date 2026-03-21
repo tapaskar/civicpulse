@@ -105,7 +105,7 @@ export default function MapPage() {
   return (
     <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
       {/* Desktop side panel */}
-      <div className="hidden md:flex flex-col w-96 bg-gray-900 border-r border-gray-800 overflow-hidden">
+      <div className="hidden md:flex flex-col w-96 bg-gray-850 border-r border-gray-700 overflow-hidden" style={{ backgroundColor: '#1a2030' }}>
         {selectedIssue ? (
           <IssueDetail
             issue={selectedIssue}
@@ -121,7 +121,7 @@ export default function MapPage() {
               onLocationSelect={handleLocationSelect}
             />
 
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-700">
               <span className="text-xs text-gray-500 font-medium">
                 {loading ? (
                   <span className="flex items-center gap-1.5">
@@ -219,7 +219,7 @@ export default function MapPage() {
         )}
 
         {/* Fixed toolbar at very bottom */}
-        <div className="flex items-center justify-center gap-3 px-4 py-3 bg-gray-900 border-t border-gray-800">
+        <div className="flex items-center justify-center gap-3 px-4 py-3 bg-gray-900 border-t border-gray-700">
           <button
             onClick={() => {
               if (selectedIssue && showList) {

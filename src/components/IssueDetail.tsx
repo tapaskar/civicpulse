@@ -103,7 +103,7 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-700">
         <button
           onClick={onBack}
           className="text-gray-400 hover:text-white transition-colors p-1 -ml-1"
@@ -335,7 +335,7 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
           )}
 
           {/* Comments */}
-          <div className="pt-2 border-t border-gray-800">
+          <div className="pt-2 border-t border-gray-700">
             <CommentThread issueId={issue.id} />
           </div>
         </div>

@@ -31,10 +31,10 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-3.5 border-b border-gray-800 transition-all duration-200 group ${
+      className={`w-full text-left p-3.5 border-b border-gray-700/60 transition-all duration-200 group ${
         selected
           ? 'bg-blue-500/10 border-l-2 border-l-blue-500'
-          : 'hover:bg-gray-800/50'
+          : 'hover:bg-white/5'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -57,7 +57,7 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
 
           {/* Address */}
           {issue.address && (
-            <p className="text-xs text-gray-600 truncate mt-0.5 flex items-center gap-1">
+            <p className="text-xs text-gray-500 truncate mt-0.5 flex items-center gap-1">
               <MapPin className="w-3 h-3 shrink-0" />
               {issue.address}
             </p>
@@ -83,12 +83,12 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
         {/* Right side: upvotes + time */}
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           <span className={`flex items-center gap-0.5 text-xs font-medium ${
-            issue.upvote_count > 0 ? 'text-blue-400' : 'text-gray-600'
+            issue.upvote_count > 0 ? 'text-blue-400' : 'text-gray-500'
           }`}>
             <ArrowUp className="w-3 h-3" />
             {issue.upvote_count}
           </span>
-          <span className="flex items-center gap-0.5 text-[10px] text-gray-600">
+          <span className="flex items-center gap-0.5 text-[10px] text-gray-500">
             <Clock className="w-3 h-3" />
             {timeAgo(issue.created_at)}
           </span>
