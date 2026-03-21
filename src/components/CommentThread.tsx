@@ -84,45 +84,45 @@ export function CommentThread({ issueId }: CommentThreadProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-white">
-        Comments {comments.length > 0 && `(${comments.length})`}
+    <div className="space-y-3">
+      <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider">
+        Comments {comments.length > 0 && <span className="text-gray-400">({comments.length})</span>}
       </h3>
 
       {loading ? (
         <div className="flex justify-center py-4">
-          <Loader2 className="w-5 h-5 text-gray-500 animate-spin" />
+          <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
         </div>
       ) : comments.length === 0 ? (
-        <p className="text-sm text-gray-500 py-4">No comments yet. Be the first to comment!</p>
+        <p className="text-sm text-gray-400 py-3">No comments yet. Be the first to comment!</p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {comments.map(comment => (
             <div
               key={comment.id}
-              className={`p-3 rounded-lg ${
+              className={`p-3 rounded-lg border ${
                 comment.is_official
-                  ? 'bg-yellow-900/20 border border-yellow-700/50'
-                  : 'bg-gray-800/50'
+                  ? 'bg-yellow-500/10 border-yellow-500/30'
+                  : 'bg-gray-700/40 border-gray-600/40'
               }`}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs text-gray-300">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs text-white font-medium">
                   {comment.author?.display_name?.[0]?.toUpperCase() ?? '?'}
                 </div>
-                <span className="text-sm font-medium text-gray-300">
+                <span className="text-sm font-medium text-gray-200">
                   {comment.author?.display_name ?? 'Anonymous'}
                 </span>
                 {comment.is_official && (
-                  <span className="flex items-center gap-1 text-xs bg-yellow-600/20 text-yellow-400 px-2 py-0.5 rounded-full">
+                  <span className="flex items-center gap-1 text-[10px] font-medium bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30">
                     <Shield className="w-3 h-3" /> Official
                   </span>
                 )}
-                <span className="text-xs text-gray-500 ml-auto">
+                <span className="text-[11px] text-gray-400 ml-auto">
                   {timeAgo(comment.created_at)}
                 </span>
               </div>
-              <p className="text-sm text-gray-300 whitespace-pre-wrap">{comment.text}</p>
+              <p className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">{comment.text}</p>
             </div>
           ))}
         </div>
@@ -137,7 +137,7 @@ export function CommentThread({ issueId }: CommentThreadProps) {
           onSubmit={handleSubmit}
         />
       ) : (
-        <p className="text-sm text-gray-500">Sign in to leave a comment.</p>
+        <p className="text-sm text-gray-400">Sign in to leave a comment.</p>
       )}
     </div>
   );
@@ -197,7 +197,7 @@ function CommentInput({
             value={text}
             onChange={e => setText(e.target.value)}
             placeholder="Add a comment..."
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-4 pr-10 py-2 text-sm text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full bg-gray-700/60 border border-gray-600/60 rounded-lg pl-4 pr-10 py-2.5 text-sm text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/40 outline-none transition-all"
           />
           <button
             type="button"

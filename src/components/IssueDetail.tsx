@@ -103,18 +103,18 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-700">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-600/50 bg-gray-800/40">
         <button
           onClick={onBack}
-          className="text-gray-400 hover:text-white transition-colors p-1 -ml-1"
+          className="text-gray-300 hover:text-white transition-colors p-1 -ml-1"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
-        <span className="text-xs text-gray-500 flex-1">Issue Detail</span>
+        <span className="text-xs text-gray-400 font-medium flex-1">Issue Detail</span>
         <UpvoteButton issueId={issue.id} initialCount={issue.upvote_count} />
         <button
           onClick={handleShare}
-          className="text-gray-400 hover:text-white p-1"
+          className="text-gray-300 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-all"
         >
           <Share2 className="w-3.5 h-3.5" />
         </button>
@@ -129,8 +129,8 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5">
             <span
-              className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: category.color + '20', color: category.color }}
+              className="flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full border"
+              style={{ backgroundColor: category.color + '20', color: category.color, borderColor: category.color + '30' }}
             >
               {category.icon} {category.label}
             </span>
@@ -153,20 +153,20 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
           </div>
 
           {/* Meta */}
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
-            <span className="flex items-center gap-1">
-              <User className="w-3 h-3" />
+          <div className="bg-gray-800/60 border border-gray-700/50 rounded-lg px-3 py-2.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-300">
+            <span className="flex items-center gap-1.5">
+              <User className="w-3 h-3 text-gray-400" />
               {issue.author?.display_name ?? 'Anonymous'}
             </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+            <span className="flex items-center gap-1.5">
+              <Clock className="w-3 h-3 text-gray-400" />
               {formatDate(issue.created_at)}
             </span>
           </div>
 
           {issue.address && (
-            <p className="flex items-center gap-1.5 text-xs text-gray-500">
-              <MapPin className="w-3 h-3 shrink-0" />
+            <p className="flex items-center gap-1.5 text-xs text-gray-300">
+              <MapPin className="w-3 h-3 shrink-0 text-gray-400" />
               {issue.address}
             </p>
           )}
@@ -317,7 +317,7 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
                   <img
                     src={url}
                     alt={`Photo ${idx + 1}`}
-                    className="w-32 h-24 object-cover rounded-lg"
+                    className="w-32 h-24 object-cover rounded-lg border border-gray-600/50"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-lg flex items-center justify-center">
                     <ExternalLink className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -329,13 +329,13 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
 
           {/* Description */}
           {issue.description && (
-            <div className="bg-gray-800/40 rounded-lg p-3">
-              <p className="text-sm text-gray-300 whitespace-pre-wrap">{issue.description}</p>
+            <div className="bg-gray-800/60 border border-gray-700/50 rounded-lg p-3.5">
+              <p className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">{issue.description}</p>
             </div>
           )}
 
           {/* Comments */}
-          <div className="pt-2 border-t border-gray-700">
+          <div className="bg-gray-800/40 border border-gray-700/50 rounded-lg p-3.5">
             <CommentThread issueId={issue.id} />
           </div>
         </div>

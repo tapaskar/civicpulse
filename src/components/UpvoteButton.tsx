@@ -66,10 +66,10 @@ export function UpvoteButton({ issueId, initialCount }: UpvoteButtonProps) {
     <button
       onClick={toggle}
       disabled={!user}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
         upvoted
-          ? 'bg-blue-600 text-white'
-          : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+          ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/20'
+          : 'bg-gray-700/80 border border-gray-600/50 text-gray-200 hover:bg-gray-600/80 hover:text-white'
       } ${!user ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <ArrowUp className="w-4 h-4" />
