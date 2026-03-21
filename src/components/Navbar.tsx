@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from './AuthModal';
-import { MapPin, Plus, Shield, LogOut, Menu, X } from 'lucide-react';
+import { Plus, Shield, LogOut, Menu, X } from 'lucide-react';
 
 export function Navbar() {
   const { user, profile, loading, signOut } = useAuth();
@@ -24,11 +24,9 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center group-hover:bg-slate-800 transition-colors">
-              <MapPin className="w-4.5 h-4.5 text-white" />
-            </div>
+            <img src="/logo.svg" alt="interns.city" className="w-8 h-8 rounded-lg" />
             <span className={`font-bold text-lg tracking-tight ${isLanding ? 'text-slate-900' : 'text-white'}`}>
-              Civic<span className="text-indigo-600">Pulse</span>
+              interns<span className="text-indigo-600">.city</span>
             </span>
           </Link>
 

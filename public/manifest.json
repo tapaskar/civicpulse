@@ -1,6 +1,6 @@
 {
-  "name": "CivicPulse",
-  "short_name": "CivicPulse",
+  "name": "interns.city",
+  "short_name": "interns.city",
   "description": "Report & track civic issues on an interactive map",
   "start_url": "/map",
   "display": "standalone",

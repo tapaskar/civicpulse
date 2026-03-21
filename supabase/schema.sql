@@ -1,4 +1,4 @@
--- CivicPulse Database Schema
+-- interns.city Database Schema
 -- Run this in Supabase SQL Editor after creating the project
 
 -- Enable extensions

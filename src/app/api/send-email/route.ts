@@ -10,8 +10,8 @@ const ses = new SESClient({
   },
 });
 
-const SES_FROM_EMAIL = process.env.SES_FROM_EMAIL || 'noreply@civicpulse.in';
-const APP_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://civicpulse-pi.vercel.app';
+const SES_FROM_EMAIL = process.env.SES_FROM_EMAIL || 'noreply@interns.city';
+const APP_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://interns.city';
 const MAX_EMAILS_PER_ISSUE = 3;
 
 export async function POST(request: NextRequest) {
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a2e;">
   <div style="background: #f8fafc; border-bottom: 3px solid #3b82f6; padding: 20px 24px;">
     <h2 style="margin: 0; font-size: 18px; color: #1e293b;">Civic Issue Report</h2>
-    <p style="margin: 4px 0 0; font-size: 13px; color: #64748b;">via CivicPulse</p>
+    <p style="margin: 4px 0 0; font-size: 13px; color: #64748b;">via interns.city</p>
   </div>
   <div style="padding: 24px;">
     <p style="margin: 0 0 16px; color: #334155;">Dear <strong>${recipientDept}</strong>,</p>
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     </table>
     <a href="${issueUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">View Full Details</a>
     <p style="margin: 24px 0 0; color: #64748b; font-size: 13px;">
-      Sent by ${senderName} via <a href="${APP_URL}" style="color: #3b82f6;">CivicPulse</a>
+      Sent by ${senderName} via <a href="${APP_URL}" style="color: #3b82f6;">interns.city</a>
     </p>
   </div>
 </div>`.trim();

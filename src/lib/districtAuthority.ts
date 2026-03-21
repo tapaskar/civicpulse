@@ -422,7 +422,7 @@ export async function reverseGeocodeDistrict(
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1&zoom=10`,
-      { headers: { 'User-Agent': 'CivicPulse/1.0' } },
+      { headers: { 'User-Agent': 'InternsCity/1.0' } },
     );
     const data = await res.json();
     const addr = data.address;

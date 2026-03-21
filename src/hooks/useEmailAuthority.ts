@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 
-const SENT_KEY = 'civicpulse_emails_sent';
+const SENT_KEY = 'internscity_emails_sent';
 
 function getSentSet(): Set<string> {
   try {

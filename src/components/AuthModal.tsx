@@ -58,7 +58,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-white">
-                    {mode === 'login' ? 'Welcome Back' : 'Join CivicPulse'}
+                    {mode === 'login' ? 'Welcome Back' : 'Join interns.city'}
                   </h2>
                   <p className="text-xs text-gray-400">
                     {mode === 'login' ? 'Sign in to report & vote' : 'Create your account'}

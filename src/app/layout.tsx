@@ -16,15 +16,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "CivicPulse — Report & Track Civic Issues",
-    template: "%s | CivicPulse",
+    default: "interns.city — Report & Track Civic Issues",
+    template: "%s | interns.city",
   },
   description:
     "Report potholes, broken streetlights, water leaks and more on an interactive map. Track resolution and help improve your city.",
   keywords: ["civic issues", "pothole reporting", "municipal", "city issues", "community"],
   manifest: "/manifest.json",
   openGraph: {
-    title: "CivicPulse — Report & Track Civic Issues",
+    title: "interns.city — Report & Track Civic Issues",
     description: "Report civic issues on an interactive map. Track resolution and help improve your city.",
     type: "website",
   },

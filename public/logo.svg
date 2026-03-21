@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Head -->
+  <circle cx="60" cy="38" r="22" fill="#1e293b"/>
+  <!-- Hair (messy intern hair) -->
+  <path d="M38 34c0-14 10-24 22-24s22 10 22 24" fill="#0f172a"/>
+  <path d="M40 30c2-10 8-18 20-18s18 8 20 18" fill="#1e293b"/>
+  <!-- Face -->
+  <circle cx="60" cy="42" r="17" fill="#fbbf24"/>
+  <!-- Glasses frame -->
+  <rect x="44" y="37" width="13" height="10" rx="3" stroke="#334155" stroke-width="2.5" fill="none"/>
+  <rect x="63" y="37" width="13" height="10" rx="3" stroke="#334155" stroke-width="2.5" fill="none"/>
+  <line x1="57" y1="42" x2="63" y2="42" stroke="#334155" stroke-width="2.5"/>
+  <line x1="44" y1="42" x2="40" y2="40" stroke="#334155" stroke-width="2"/>
+  <line x1="76" y1="42" x2="80" y2="40" stroke="#334155" stroke-width="2"/>
+  <!-- Eyes behind glasses -->
+  <circle cx="50.5" cy="42" r="2" fill="#0f172a"/>
+  <circle cx="69.5" cy="42" r="2" fill="#0f172a"/>
+  <!-- Eyebrows -->
+  <path d="M45 35.5c2-1.5 5-1.5 7 0" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <path d="M68 35.5c2-1.5 5-1.5 7 0" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <!-- Smile -->
+  <path d="M53 49c3 3 11 3 14 0" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <!-- Body (shirt/jacket) -->
+  <path d="M38 62c-4 2-10 8-12 18h68c-2-10-8-16-12-18" fill="#4f46e5"/>
+  <!-- Collar / T-shirt -->
+  <path d="M52 60l8 8 8-8" fill="#818cf8"/>
+  <!-- Lanyard / ID badge -->
+  <line x1="60" y1="68" x2="60" y2="88" stroke="#6366f1" stroke-width="2"/>
+  <rect x="52" y="85" width="16" height="20" rx="3" fill="white" stroke="#c7d2fe" stroke-width="1.5"/>
+  <!-- Badge photo area -->
+  <rect x="55" y="88" width="10" height="8" rx="1" fill="#e0e7ff"/>
+  <!-- Badge text lines -->
+  <line x1="55" y1="99" x2="65" y2="99" stroke="#c7d2fe" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="56" y1="102" x2="64" y2="102" stroke="#e0e7ff" stroke-width="1" stroke-linecap="round"/>
+  <!-- Arms hint -->
+  <path d="M26 80c4-6 8-12 12-18" stroke="#4338ca" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M94 80c-4-6-8-12-12-18" stroke="#4338ca" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

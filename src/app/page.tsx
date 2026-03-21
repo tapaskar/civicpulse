@@ -148,7 +148,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-slate-100 py-8 px-6 text-center">
         <p className="text-xs text-slate-400">
-          CivicPulse — Open-source civic issue tracker for India
+          interns.city — Open-source civic issue tracker for India
         </p>
       </footer>
     </div>
