@@ -10,9 +10,59 @@ const ses = new SESClient({
   },
 });
 
-const SES_FROM_EMAIL = process.env.SES_FROM_EMAIL || 'noreply@interns.city';
+const EMAIL_DOMAIN = process.env.SES_EMAIL_DOMAIN || 'interns.city';
+const FALLBACK_FROM = process.env.SES_FROM_EMAIL || `admin@${EMAIL_DOMAIN}`;
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://interns.city';
 const MAX_EMAILS_PER_ISSUE = 3;
+
+// Map known Indian cities to email prefixes
+const CITY_KEYWORDS: [string, string][] = [
+  ['delhi', 'delhi'],
+  ['new delhi', 'delhi'],
+  ['mumbai', 'mumbai'],
+  ['bengaluru', 'bengaluru'],
+  ['bangalore', 'bengaluru'],
+  ['chennai', 'chennai'],
+  ['hyderabad', 'hyderabad'],
+  ['pune', 'pune'],
+  ['kolkata', 'kolkata'],
+  ['calcutta', 'kolkata'],
+  ['gurugram', 'gurugram'],
+  ['gurgaon', 'gurugram'],
+  ['noida', 'noida'],
+  ['faridabad', 'faridabad'],
+  ['jaipur', 'jaipur'],
+  ['lucknow', 'lucknow'],
+  ['ahmedabad', 'ahmedabad'],
+  ['chandigarh', 'chandigarh'],
+  ['bhopal', 'bhopal'],
+  ['indore', 'indore'],
+  ['patna', 'patna'],
+  ['kochi', 'kochi'],
+  ['thiruvananthapuram', 'thiruvananthapuram'],
+  ['visakhapatnam', 'visakhapatnam'],
+  ['coimbatore', 'coimbatore'],
+  ['nagpur', 'nagpur'],
+  ['surat', 'surat'],
+  ['vadodara', 'vadodara'],
+  ['thane', 'thane'],
+  ['ghaziabad', 'ghaziabad'],
+];
+
+function getCityFromAddress(address: string | null): string | null {
+  if (!address) return null;
+  const lower = address.toLowerCase();
+  for (const [keyword, city] of CITY_KEYWORDS) {
+    if (lower.includes(keyword)) return city;
+  }
+  return null;
+}
+
+function getFromEmail(address: string | null): string {
+  const city = getCityFromAddress(address);
+  if (city) return `${city}@${EMAIL_DOMAIN}`;
+  return FALLBACK_FROM;
+}
 
 export async function POST(request: NextRequest) {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
@@ -94,9 +144,10 @@ export async function POST(request: NextRequest) {
   </div>
 </div>`.trim();
 
-    // Send via Amazon SES
+    // Send via Amazon SES (city-specific from address)
+    const fromEmail = getFromEmail(issue.address);
     const command = new SendEmailCommand({
-      Source: SES_FROM_EMAIL,
+      Source: `interns.city <${fromEmail}>`,
       Destination: { ToAddresses: [recipientEmail] },
       Message: {
         Subject: { Data: subject, Charset: 'UTF-8' },
