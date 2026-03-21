@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from './AuthModal';
-import { Plus, Shield, LogOut, Menu, X } from 'lucide-react';
+import { Plus, Shield, LogOut, Menu, X, Settings } from 'lucide-react';
 
 export function Navbar() {
   const { user, profile, loading, signOut } = useAuth();
@@ -62,8 +62,10 @@ export function Navbar() {
             ) : null}
 
             {loading ? null : user ? (
-              <div className="flex items-center gap-3 ml-1">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ml-1">
+                <Link href="/settings" className={`flex items-center gap-2 px-2 py-1 rounded-lg transition-all ${
+                  isLanding ? 'hover:bg-slate-100' : 'hover:bg-white/5'
+                }`}>
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
                     isLanding
                       ? 'bg-indigo-100 text-indigo-600'
@@ -74,7 +76,14 @@ export function Navbar() {
                     </span>
                   </div>
                   <span className={`text-sm ${isLanding ? 'text-slate-600' : 'text-gray-400'}`}>{profile?.display_name}</span>
-                </div>
+                </Link>
+                <Link href="/settings" className={`p-1.5 rounded-lg transition-all ${
+                  isLanding
+                    ? 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
+                    : 'text-gray-500 hover:text-white hover:bg-white/5'
+                }`}>
+                  <Settings className="w-4 h-4" />
+                </Link>
                 <button onClick={signOut} className={`p-1.5 rounded-lg transition-all ${
                   isLanding
                     ? 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
@@ -135,11 +144,18 @@ export function Navbar() {
               </Link>
             )}
             {user ? (
-              <button onClick={() => { signOut(); setMobileMenu(false); }} className={`block w-full text-left text-sm py-2.5 px-3 rounded-lg transition-colors ${
-                isLanding ? 'text-slate-400 hover:bg-slate-50' : 'text-gray-500 hover:bg-white/5'
-              }`}>
-                Sign Out ({profile?.display_name})
-              </button>
+              <>
+                <Link href="/settings" onClick={() => setMobileMenu(false)} className={`block text-sm py-2.5 px-3 rounded-lg transition-colors ${
+                  isLanding ? 'text-slate-600 hover:bg-slate-50' : 'text-gray-300 hover:bg-white/5'
+                }`}>
+                  Settings
+                </Link>
+                <button onClick={() => { signOut(); setMobileMenu(false); }} className={`block w-full text-left text-sm py-2.5 px-3 rounded-lg transition-colors ${
+                  isLanding ? 'text-slate-400 hover:bg-slate-50' : 'text-gray-500 hover:bg-white/5'
+                }`}>
+                  Sign Out ({profile?.display_name})
+                </button>
+              </>
             ) : (
               <button onClick={() => { setShowAuth(true); setMobileMenu(false); }} className={`block w-full text-left text-sm py-2.5 px-3 rounded-lg transition-colors ${
                 isLanding ? 'text-indigo-600 hover:bg-indigo-50' : 'text-blue-400 hover:bg-blue-500/10'
