@@ -15,8 +15,10 @@ import {
   ChevronDown,
   MapPin,
   TrendingUp,
+  Database,
 } from 'lucide-react';
 import Link from 'next/link';
+import { SEED_ISSUES } from '@/lib/seedData';
 
 export default function AdminPage() {
   const { user, profile } = useAuth();
@@ -27,6 +29,8 @@ export default function AdminPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState<Status>('in_progress');
   const [updating, setUpdating] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+  const [seedResult, setSeedResult] = useState<string | null>(null);
 
   const fetchIssues = useCallback(async () => {
     let query = supabase
@@ -74,6 +78,40 @@ export default function AdminPage() {
     }
   };
 
+  const handleSeed = async () => {
+    setSeeding(true);
+    setSeedResult(null);
+    try {
+      const issuesToInsert = SEED_ISSUES.map(issue => ({
+        title: issue.title,
+        description: issue.description,
+        category: issue.category,
+        urgency: issue.urgency,
+        status: issue.status,
+        location: `POINT(${issue.lng} ${issue.lat})`,
+        address: issue.address,
+        photo_urls: [],
+        author_id: user!.id,
+      }));
+
+      const { data, error } = await supabase
+        .from('issues')
+        .insert(issuesToInsert)
+        .select('id');
+
+      if (error) {
+        setSeedResult(`Error: ${error.message}`);
+      } else {
+        setSeedResult(`Seeded ${data.length} issues across 10 cities`);
+        await fetchIssues();
+      }
+    } catch (e: unknown) {
+      setSeedResult(`Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const handleBulkUpdate = async () => {
     if (selected.size === 0) return;
     setUpdating(true);
@@ -111,13 +149,28 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
-          <Link
-            href="/admin/analytics"
-            className="flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300"
-          >
-            <BarChart3 className="w-4 h-4" /> Analytics
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleSeed}
+              disabled={seeding}
+              className="flex items-center gap-1.5 text-sm text-amber-400 hover:text-amber-300 disabled:opacity-50"
+            >
+              {seeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+              {seeding ? 'Seeding...' : 'Seed Data'}
+            </button>
+            <Link
+              href="/admin/analytics"
+              className="flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300"
+            >
+              <BarChart3 className="w-4 h-4" /> Analytics
+            </Link>
+          </div>
         </div>
+        {seedResult && (
+          <div className={`text-sm px-4 py-2 rounded-lg ${seedResult.startsWith('Error') ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
+            {seedResult}
+          </div>
+        )}
 
         {/* Stats cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
