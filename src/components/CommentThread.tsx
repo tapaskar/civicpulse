@@ -72,14 +72,19 @@ export function CommentThread({ issueId }: CommentThreadProps) {
 
     const isOfficial = profile?.role === 'admin' || profile?.role === 'official';
 
-    await supabase.from('comments').insert({
+    const { error } = await supabase.from('comments').insert({
       issue_id: issueId,
       author_id: user.id,
       text: text.trim(),
       is_official: isOfficial,
     });
 
-    setText('');
+    if (!error) {
+      setText('');
+      await fetchComments();
+    } else {
+      console.error('Comment insert error:', error.message);
+    }
     setSubmitting(false);
   };
 
