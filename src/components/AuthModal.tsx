@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { X, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, User, Loader2, MapPin } from 'lucide-react';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -46,79 +46,107 @@ export function AuthModal({ onClose }: AuthModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-md p-6" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">
-            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="relative w-full max-w-md animate-scale-in" onClick={e => e.stopPropagation()}>
+        {/* Glow behind */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-3xl blur-xl" />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === 'register' && (
+        <div className="relative bg-gray-900 border border-white/10 rounded-2xl overflow-hidden">
+          {/* Gradient header */}
+          <div className="bg-gradient-to-r from-emerald-600/20 to-teal-600/20 px-6 pt-6 pb-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                  <MapPin className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-white">
+                    {mode === 'login' ? 'Welcome Back' : 'Join CivicPulse'}
+                  </h2>
+                  <p className="text-xs text-gray-400">
+                    {mode === 'login' ? 'Sign in to report & vote' : 'Create your account'}
+                  </p>
+                </div>
+              </div>
+              <button onClick={onClose} className="text-gray-500 hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition-all">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            {mode === 'register' && (
+              <div className="relative">
+                <User className="absolute left-3.5 top-3 w-4 h-4 text-gray-600" />
+                <input
+                  type="text"
+                  placeholder="Display Name"
+                  value={displayName}
+                  onChange={e => setDisplayName(e.target.value)}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-white placeholder-gray-600 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all"
+                />
+              </div>
+            )}
+
             <div className="relative">
-              <User className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
+              <Mail className="absolute left-3.5 top-3 w-4 h-4 text-gray-600" />
               <input
-                type="text"
-                placeholder="Display Name"
-                value={displayName}
-                onChange={e => setDisplayName(e.target.value)}
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-white placeholder-gray-600 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all"
               />
             </div>
-          )}
 
-          <div className="relative">
-            <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-            />
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-3 w-4 h-4 text-gray-600" />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-white placeholder-gray-600 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all"
+              />
+            </div>
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+            {success && (
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">
+                <p className="text-emerald-400 text-sm">{success}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-gray-700 disabled:to-gray-700 text-white py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 disabled:shadow-none"
+            >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {mode === 'login' ? 'Sign In' : 'Create Account'}
+            </button>
+          </form>
+
+          <div className="px-6 pb-6">
+            <p className="text-center text-sm text-gray-500">
+              {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
+              <button
+                onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setSuccess(''); }}
+                className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+              >
+                {mode === 'login' ? 'Sign Up' : 'Sign In'}
+              </button>
+            </p>
           </div>
-
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-            />
-          </div>
-
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          {success && <p className="text-emerald-400 text-sm">{success}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800 text-white py-2.5 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-          >
-            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {mode === 'login' ? 'Sign In' : 'Create Account'}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-400 mt-4">
-          {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
-          <button
-            onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setSuccess(''); }}
-            className="text-emerald-400 hover:text-emerald-300 font-medium"
-          >
-            {mode === 'login' ? 'Sign Up' : 'Sign In'}
-          </button>
-        </p>
+        </div>
       </div>
     </div>
   );

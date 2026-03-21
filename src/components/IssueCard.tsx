@@ -31,42 +31,49 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-3 border-b border-gray-800 hover:bg-gray-800/50 transition-colors ${
-        selected ? 'bg-gray-800/80 border-l-2 border-l-emerald-500' : ''
+      className={`w-full text-left p-3.5 border-b border-white/5 transition-all duration-200 group ${
+        selected
+          ? 'bg-emerald-500/10 border-l-2 border-l-emerald-500'
+          : 'hover:bg-white/[0.03]'
       }`}
     >
       <div className="flex items-start gap-3">
         {/* Category icon */}
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shrink-0"
-          style={{ backgroundColor: category.color + '20' }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 transition-transform duration-200 group-hover:scale-105"
+          style={{
+            backgroundColor: category.color + '15',
+            boxShadow: `0 0 12px ${category.color}10`,
+          }}
         >
           {category.icon}
         </div>
 
         <div className="flex-1 min-w-0">
           {/* Title */}
-          <h3 className="text-sm font-medium text-white truncate">{issue.title}</h3>
+          <h3 className="text-sm font-medium text-gray-100 truncate group-hover:text-white transition-colors">
+            {issue.title}
+          </h3>
 
           {/* Address */}
           {issue.address && (
-            <p className="text-xs text-gray-500 truncate mt-0.5 flex items-center gap-1">
+            <p className="text-xs text-gray-600 truncate mt-0.5 flex items-center gap-1">
               <MapPin className="w-3 h-3 shrink-0" />
               {issue.address}
             </p>
           )}
 
           {/* Tags */}
-          <div className="flex items-center gap-2 mt-1.5">
+          <div className="flex items-center gap-1.5 mt-2">
             <span
-              className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
-              style={{ backgroundColor: status.color + '20', color: status.color }}
+              className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: status.color + '18', color: status.color }}
             >
               {status.label}
             </span>
             <span
-              className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
-              style={{ backgroundColor: urgency.color + '20', color: urgency.color }}
+              className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: urgency.color + '18', color: urgency.color }}
             >
               {urgency.label}
             </span>
@@ -74,12 +81,14 @@ export const IssueCard = memo(function IssueCard({ issue, selected, onClick }: I
         </div>
 
         {/* Right side: upvotes + time */}
-        <div className="flex flex-col items-end gap-1 shrink-0">
-          <span className="flex items-center gap-0.5 text-xs text-gray-400">
+        <div className="flex flex-col items-end gap-1.5 shrink-0">
+          <span className={`flex items-center gap-0.5 text-xs font-medium ${
+            issue.upvote_count > 0 ? 'text-emerald-400' : 'text-gray-600'
+          }`}>
             <ArrowUp className="w-3 h-3" />
             {issue.upvote_count}
           </span>
-          <span className="flex items-center gap-0.5 text-[10px] text-gray-500">
+          <span className="flex items-center gap-0.5 text-[10px] text-gray-600">
             <Clock className="w-3 h-3" />
             {timeAgo(issue.created_at)}
           </span>
