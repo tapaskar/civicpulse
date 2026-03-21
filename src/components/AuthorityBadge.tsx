@@ -23,7 +23,7 @@ interface AuthorityBadgeProps {
 
 function ContactChip({ icon, label, href }: { icon: React.ReactNode; label: string; href?: string }) {
   const content = (
-    <span className="inline-flex items-center gap-1 text-[11px] text-gray-300 bg-gray-800 px-2 py-0.5 rounded-full hover:bg-gray-700 transition-colors">
+    <span className="inline-flex items-center gap-1 text-[11px] text-amber-950 bg-amber-100/80 px-2 py-0.5 rounded-full hover:bg-amber-200/80 transition-colors">
       {icon} {label}
     </span>
   );
@@ -41,48 +41,48 @@ function AuthorityRow({ authority }: { authority: Authority }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-1.5">
-        <Building2 className="w-3 h-3 text-blue-500 shrink-0" />
-        <span className="text-xs font-medium text-gray-200">{authority.department}</span>
+        <Building2 className="w-3 h-3 text-amber-700 shrink-0" />
+        <span className="text-xs font-medium text-amber-950">{authority.department}</span>
       </div>
       <div className="flex flex-wrap gap-1 pl-[18px]">
         {authority.twitter && (
           <ContactChip
-            icon={<Twitter className="w-3 h-3 text-sky-400" />}
+            icon={<Twitter className="w-3 h-3 text-sky-600" />}
             label={authority.twitter}
             href={`https://x.com/${authority.twitter.replace('@', '')}`}
           />
         )}
         {authority.email && (
           <ContactChip
-            icon={<Mail className="w-3 h-3 text-amber-400" />}
+            icon={<Mail className="w-3 h-3 text-amber-700" />}
             label={authority.email}
             href={`mailto:${authority.email}`}
           />
         )}
         {authority.helpline && (
           <ContactChip
-            icon={<Phone className="w-3 h-3 text-green-400" />}
+            icon={<Phone className="w-3 h-3 text-green-700" />}
             label={authority.helpline}
             href={`tel:${authority.helpline.replace(/[^0-9+]/g, '')}`}
           />
         )}
         {authority.whatsapp && (
           <ContactChip
-            icon={<MessageCircle className="w-3 h-3 text-green-500" />}
+            icon={<MessageCircle className="w-3 h-3 text-green-700" />}
             label={`WA ${authority.whatsapp}`}
             href={`https://wa.me/91${authority.whatsapp.replace(/[^0-9]/g, '')}`}
           />
         )}
         {authority.phone && !authority.helpline && (
           <ContactChip
-            icon={<Phone className="w-3 h-3 text-green-400" />}
+            icon={<Phone className="w-3 h-3 text-green-700" />}
             label={authority.phone}
             href={`tel:${authority.phone.replace(/[^0-9+]/g, '')}`}
           />
         )}
         {authority.website && (
           <ContactChip
-            icon={<ExternalLink className="w-3 h-3 text-gray-400" />}
+            icon={<ExternalLink className="w-3 h-3 text-amber-700" />}
             label="Portal"
             href={authority.website}
           />
@@ -96,40 +96,40 @@ function DistrictRow({ dm }: { dm: DistrictAuthority }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-1.5">
-        <Landmark className="w-3 h-3 text-amber-400 shrink-0" />
-        <span className="text-xs font-medium text-gray-200">
+        <Landmark className="w-3 h-3 text-amber-800 shrink-0" />
+        <span className="text-xs font-medium text-amber-950">
           {dm.title}, {dm.district}
         </span>
       </div>
       <div className="flex flex-wrap gap-1 pl-[18px]">
         {dm.email && (
           <ContactChip
-            icon={<Mail className="w-3 h-3 text-amber-400" />}
+            icon={<Mail className="w-3 h-3 text-amber-700" />}
             label={dm.email}
             href={`mailto:${dm.email}`}
           />
         )}
         {dm.phone && (
           <ContactChip
-            icon={<Phone className="w-3 h-3 text-green-400" />}
+            icon={<Phone className="w-3 h-3 text-green-700" />}
             label={dm.phone}
             href={`tel:${dm.phone.replace(/[^0-9+]/g, '')}`}
           />
         )}
         {dm.website && (
           <ContactChip
-            icon={<ExternalLink className="w-3 h-3 text-gray-400" />}
+            icon={<ExternalLink className="w-3 h-3 text-amber-700" />}
             label="District Portal"
             href={dm.website}
           />
         )}
         <ContactChip
-          icon={<ExternalLink className="w-3 h-3 text-blue-400" />}
+          icon={<ExternalLink className="w-3 h-3 text-blue-700" />}
           label="CPGRAMS"
           href={dm.cpgrams}
         />
         <ContactChip
-          icon={<Phone className="w-3 h-3 text-red-400" />}
+          icon={<Phone className="w-3 h-3 text-red-700" />}
           label={dm.helpline}
           href={`tel:${dm.helpline}`}
         />
@@ -166,16 +166,19 @@ export function AuthorityBadge({ lng, lat }: AuthorityBadgeProps) {
       : 'Loading...';
 
   return (
-    <div className="bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg shadow-lg p-2.5 space-y-2 max-w-xs">
-      <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">
+    <div className="bg-amber-50 border border-amber-200 rounded-xl shadow-lg shadow-amber-900/10 p-3 space-y-2.5 max-w-xs">
+      <div className="flex items-center gap-2">
+        <div className="w-5 h-5 rounded-md bg-amber-600 flex items-center justify-center">
+          <Landmark className="w-3 h-3 text-white" />
+        </div>
+        <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider">
           {heading}
         </span>
       </div>
-      <div className="space-y-2 max-h-56 overflow-y-auto">
+      <div className="space-y-2.5 max-h-56 overflow-y-auto">
         {/* District Magistrate / Collector row */}
         {dmLoading && (
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="flex items-center gap-1.5 text-xs text-amber-600">
             <Loader2 className="w-3 h-3 animate-spin" /> Loading DM info...
           </div>
         )}
