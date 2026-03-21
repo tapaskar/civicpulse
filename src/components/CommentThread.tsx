@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import type { Comment } from '@/lib/types';
-import { Send, Loader2, Shield, Smile } from 'lucide-react';
+import { Send, Loader2, Shield, Smile, Pencil, Trash2, X, Check } from 'lucide-react';
 
 const EMOJI_GROUPS: { label: string; emojis: string[] }[] = [
   { label: 'Common', emojis: ['👍', '👎', '❤️', '🔥', '👏', '😢', '😡', '🙏', '💯', '⚠️', '✅', '❌'] },
@@ -34,6 +34,9 @@ export function CommentThread({ issueId }: CommentThreadProps) {
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchComments = async () => {
     const { data } = await supabase
@@ -88,6 +91,31 @@ export function CommentThread({ issueId }: CommentThreadProps) {
     setSubmitting(false);
   };
 
+  const handleEdit = async (commentId: string) => {
+    if (!editText.trim()) return;
+    const { error } = await supabase
+      .from('comments')
+      .update({ text: editText.trim() })
+      .eq('id', commentId);
+    if (!error) {
+      setEditingId(null);
+      setEditText('');
+      await fetchComments();
+    }
+  };
+
+  const handleDelete = async (commentId: string) => {
+    setDeletingId(commentId);
+    const { error } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', commentId);
+    if (!error) {
+      await fetchComments();
+    }
+    setDeletingId(null);
+  };
+
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-gray-200 uppercase tracking-wider">
@@ -102,34 +130,89 @@ export function CommentThread({ issueId }: CommentThreadProps) {
         <p className="text-sm text-gray-400 py-3">No comments yet. Be the first to comment!</p>
       ) : (
         <div className="space-y-2">
-          {comments.map(comment => (
-            <div
-              key={comment.id}
-              className={`p-3 rounded-lg border ${
-                comment.is_official
-                  ? 'bg-yellow-500/10 border-yellow-500/30'
-                  : 'bg-gray-700/40 border-gray-600/40'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs text-white font-medium">
-                  {comment.author?.display_name?.[0]?.toUpperCase() ?? '?'}
-                </div>
-                <span className="text-sm font-medium text-gray-200">
-                  {comment.author?.display_name ?? 'Anonymous'}
-                </span>
-                {comment.is_official && (
-                  <span className="flex items-center gap-1 text-[10px] font-medium bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30">
-                    <Shield className="w-3 h-3" /> Official
+          {comments.map(comment => {
+            const isOwn = user?.id === comment.author_id;
+            const isEditing = editingId === comment.id;
+
+            return (
+              <div
+                key={comment.id}
+                className={`p-3 rounded-lg border group ${
+                  comment.is_official
+                    ? 'bg-yellow-500/10 border-yellow-500/30'
+                    : 'bg-gray-700/40 border-gray-600/40'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs text-white font-medium">
+                    {comment.author?.display_name?.[0]?.toUpperCase() ?? '?'}
+                  </div>
+                  <span className="text-sm font-medium text-gray-200">
+                    {comment.author?.display_name ?? 'Anonymous'}
                   </span>
+                  {comment.is_official && (
+                    <span className="flex items-center gap-1 text-[10px] font-medium bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full border border-yellow-500/30">
+                      <Shield className="w-3 h-3" /> Official
+                    </span>
+                  )}
+                  <span className="text-[11px] text-gray-400 ml-auto">
+                    {timeAgo(comment.created_at)}
+                  </span>
+                  {isOwn && !isEditing && (
+                    <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => { setEditingId(comment.id); setEditText(comment.text); }}
+                        className="p-1 rounded text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+                        title="Edit"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(comment.id)}
+                        disabled={deletingId === comment.id}
+                        className="p-1 rounded text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                        title="Delete"
+                      >
+                        {deletingId === comment.id
+                          ? <Loader2 className="w-3 h-3 animate-spin" />
+                          : <Trash2 className="w-3 h-3" />
+                        }
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {isEditing ? (
+                  <div className="flex gap-2 mt-1">
+                    <input
+                      value={editText}
+                      onChange={e => setEditText(e.target.value)}
+                      className="flex-1 bg-gray-700/60 border border-gray-600/60 rounded-lg px-3 py-1.5 text-sm text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all"
+                      autoFocus
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') handleEdit(comment.id);
+                        if (e.key === 'Escape') { setEditingId(null); setEditText(''); }
+                      }}
+                    />
+                    <button
+                      onClick={() => handleEdit(comment.id)}
+                      disabled={!editText.trim()}
+                      className="p-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 text-white transition-colors"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => { setEditingId(null); setEditText(''); }}
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">{comment.text}</p>
                 )}
-                <span className="text-[11px] text-gray-400 ml-auto">
-                  {timeAgo(comment.created_at)}
-                </span>
               </div>
-              <p className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed">{comment.text}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
