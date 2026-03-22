@@ -580,6 +580,18 @@ export const CITY_AUTHORITIES: CityAuthorities[] = [
   },
 ];
 
+/** City name → center coordinates derived from bounding boxes */
+export const CITY_CENTERS: Record<string, { lng: number; lat: number; zoom: number }> = Object.fromEntries(
+  CITY_AUTHORITIES.map(c => [
+    c.name,
+    {
+      lng: (c.bounds[0] + c.bounds[2]) / 2,
+      lat: (c.bounds[1] + c.bounds[3]) / 2,
+      zoom: 13,
+    },
+  ])
+);
+
 /** Find city authorities for a given map center coordinate */
 export function getAuthoritiesForLocation(lng: number, lat: number): CityAuthorities | null {
   return CITY_AUTHORITIES.find(city => {

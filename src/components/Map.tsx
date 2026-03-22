@@ -21,6 +21,11 @@ interface MapProps {
   onSelectIssue: (issue: Issue) => void;
   onBoundsChange: (bounds: { minLng: number; minLat: number; maxLng: number; maxLat: number }) => void;
   onMapClick?: (lngLat: { lng: number; lat: number }) => void;
+  getCategoryFn?: (cat: string) => { color: string; icon: string; label: string };
+  initialCenter?: [number, number];
+  initialZoom?: number;
+  photoMarkers?: boolean;
+  boundaryGeoJSON?: { type: 'Polygon'; coordinates: number[][][] };
 }
 
 export interface MapHandle {
@@ -55,8 +60,12 @@ function spiderfyPositions(
   return positions;
 }
 
-export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, selectedId, onSelectIssue, onBoundsChange, onMapClick }, ref) {
+export const Map = forwardRef<MapHandle, MapProps>(function Map({
+  issues, selectedId, onSelectIssue, onBoundsChange, onMapClick,
+  getCategoryFn, initialCenter, initialZoom, photoMarkers, boundaryGeoJSON,
+}, ref) {
   const mapRef = useRef<MapRef>(null);
+  const catFn = getCategoryFn ?? getCategoryConfig;
 
   useImperativeHandle(ref, () => ({
     flyTo: (lng: number, lat: number, zoom = 15) => {
@@ -65,10 +74,34 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, select
   }));
 
   const [viewState, setViewState] = useState({
-    longitude: DEFAULT_CENTER[0],
-    latitude: DEFAULT_CENTER[1],
-    zoom: DEFAULT_ZOOM,
+    longitude: initialCenter?.[0] ?? DEFAULT_CENTER[0],
+    latitude: initialCenter?.[1] ?? DEFAULT_CENTER[1],
+    zoom: initialZoom ?? DEFAULT_ZOOM,
   });
+
+  // Add boundary layer when map loads
+  const addBoundaryLayer = useCallback(() => {
+    if (!boundaryGeoJSON) return;
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+    if (map.getSource('society-boundary')) return;
+    map.addSource('society-boundary', {
+      type: 'geojson',
+      data: { type: 'Feature', geometry: boundaryGeoJSON, properties: {} },
+    });
+    map.addLayer({
+      id: 'society-boundary-fill',
+      type: 'fill',
+      source: 'society-boundary',
+      paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.05 },
+    });
+    map.addLayer({
+      id: 'society-boundary-line',
+      type: 'line',
+      source: 'society-boundary',
+      paint: { 'line-color': '#3b82f6', 'line-width': 2, 'line-dasharray': [3, 2] },
+    });
+  }, [boundaryGeoJSON]);
   const [clusters, setClusters] = useState<any[]>([]);
   const [spider, setSpider] = useState<SpiderfyState | null>(null);
   const superclusterRef = useRef(new Supercluster({ radius: 60, maxZoom: 16 }));
@@ -120,7 +153,8 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, select
   const handleLoad = useCallback(() => {
     emitBounds();
     updateClusters();
-  }, [emitBounds, updateClusters]);
+    addBoundaryLayer();
+  }, [emitBounds, updateClusters, addBoundaryLayer]);
 
   const handleMoveEnd = useCallback(
     (e: ViewStateChangeEvent) => {
@@ -257,7 +291,7 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, select
         }
 
         const issue = props.issue;
-        const cat = getCategoryConfig(issue.category);
+        const cat = catFn(issue.category);
         const isSelected = issue.id === selectedId;
 
         return (
@@ -272,14 +306,25 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, select
             }}
           >
             <div className="cursor-pointer flex flex-col items-center">
-              <div
-                className={`rounded-full flex items-center justify-center text-sm shadow-lg transition-transform ${
-                  isSelected ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'
-                }`}
-                style={{ width: 32, height: 32, backgroundColor: cat.color }}
-              >
-                {cat.icon}
-              </div>
+              {photoMarkers && issue.photo_urls?.[0] ? (
+                <div
+                  className={`rounded-full overflow-hidden border-2 shadow-lg transition-transform ${
+                    isSelected ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'
+                  }`}
+                  style={{ width: 40, height: 40, borderColor: cat.color }}
+                >
+                  <img src={issue.photo_urls[0]} alt="" className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div
+                  className={`rounded-full flex items-center justify-center text-sm shadow-lg transition-transform ${
+                    isSelected ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'
+                  }`}
+                  style={{ width: 32, height: 32, backgroundColor: cat.color }}
+                >
+                  {cat.icon}
+                </div>
+              )}
               <div
                 className="w-0 h-0"
                 style={{
@@ -296,7 +341,7 @@ export const Map = forwardRef<MapHandle, MapProps>(function Map({ issues, select
       {/* Spider legs — SVG lines + fanned-out markers */}
       {spider && spiderPositions.map((pos, i) => {
         const issue = spider.leaves[i];
-        const cat = getCategoryConfig(issue.category);
+        const cat = catFn(issue.category);
         const isSelected = issue.id === selectedId;
 
         return (

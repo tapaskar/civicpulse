@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
 
         const command = new SendEmailCommand({
           Source: `interns.city <${fromEmail}>`,
-          ReplyToAddresses: [`reply+${issueId}@${EMAIL_DOMAIN}`],
+          ReplyToAddresses: [`reply+${issueId}@reply.${EMAIL_DOMAIN}`],
           Destination: { ToAddresses: [recipient.email] },
           Message: {
             Subject: { Data: emailSubject, Charset: 'UTF-8' },

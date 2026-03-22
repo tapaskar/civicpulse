@@ -8,6 +8,8 @@ import { FilterBar } from '@/components/FilterBar';
 import type { Issue, IssueFilters } from '@/lib/types';
 import type { MapHandle } from '@/components/Map';
 import { useAuth } from '@/hooks/useAuth';
+import { useCityStats } from '@/hooks/useCityStats';
+import { CITY_CENTERS } from '@/lib/authorities';
 
 // Lazy-load heavy components that aren't needed on initial render
 const IssueDetail = dynamic(() => import('@/components/IssueDetail').then(m => ({ default: m.IssueDetail })));
@@ -42,6 +44,7 @@ export default function MapPage() {
 
   const mapHandleRef = useRef<MapHandle>(null);
   const { issues, loading } = useIssues(bounds, filters);
+  const { stats: cityStats } = useCityStats();
 
   const handleLocationSelect = useCallback(
     (loc: { lng: number; lat: number; label: string }) => {
@@ -103,7 +106,29 @@ export default function MapPage() {
   }, [openReport]);
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+    <div className="flex-1 flex flex-col overflow-hidden relative">
+      {/* City stats bar */}
+      {cityStats.length > 0 && (
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900/95 border-b border-gray-700/50 overflow-x-auto no-scrollbar shrink-0">
+          <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider whitespace-nowrap mr-1">Cities</span>
+          {cityStats.map(s => {
+            const center = CITY_CENTERS[s.city];
+            return (
+              <button
+                key={s.city}
+                onClick={() => center && mapHandleRef.current?.flyTo(center.lng, center.lat, center.zoom)}
+                className="inline-flex items-center gap-1.5 text-[11px] font-medium text-gray-300 hover:text-white bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 px-2.5 py-1 rounded-full transition-colors whitespace-nowrap shrink-0"
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${s.open_count > 0 ? 'bg-red-400' : 'bg-green-400'}`} />
+                {s.city}
+                <span className="text-gray-500">{s.total}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
       {/* Desktop side panel */}
       <div className="hidden md:flex flex-col w-96 bg-gray-850 border-r border-gray-700 overflow-hidden" style={{ backgroundColor: '#1a2030' }}>
         {selectedIssue ? (
@@ -258,6 +283,7 @@ export default function MapPage() {
       )}
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
+    </div>
     </div>
   );
 }

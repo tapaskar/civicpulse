@@ -1,7 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 import { MapPin, Camera, Users, BarChart3, ArrowRight, Zap, Shield, Globe, AlertTriangle, Droplets, Lightbulb, Trash2, Volume2, Car } from 'lucide-react';
+import { CityStatsSection } from '@/components/CityStatsSection';
 
 const FEATURES = [
   {
@@ -32,13 +31,6 @@ const FEATURES = [
     bg: 'bg-gradient-to-br from-rose-50 to-pink-50 border-rose-200/60',
     iconBg: 'bg-rose-100 text-rose-600',
   },
-];
-
-const STATS = [
-  { value: '780+', label: 'Districts Covered', color: 'from-indigo-500 to-blue-500' },
-  { value: '10+', label: 'City Authorities', color: 'from-emerald-500 to-teal-500' },
-  { value: '10', label: 'Issue Categories', color: 'from-amber-500 to-orange-500' },
-  { value: '24/7', label: 'Real-time Updates', color: 'from-rose-500 to-pink-500' },
 ];
 
 const ISSUE_TYPES = [
@@ -196,15 +188,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats */}
+      {/* Stats — live city-wise data */}
       <section className="py-16 px-6 bg-slate-50">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-          {STATS.map(s => (
-            <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 text-center hover:shadow-md transition-shadow">
-              <div className={`text-3xl md:text-4xl font-bold bg-gradient-to-r ${s.color} bg-clip-text text-transparent`}>{s.value}</div>
-              <div className="text-xs text-slate-400 mt-1.5 uppercase tracking-wider font-medium">{s.label}</div>
-            </div>
-          ))}
+        <div className="max-w-5xl mx-auto">
+          <CityStatsSection />
         </div>
       </section>
 
@@ -261,10 +248,21 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 py-8 px-6 text-center">
-        <p className="text-xs text-slate-500">
-          interns.city — Open-source civic issue tracker for India
-        </p>
+      <footer className="bg-slate-900 border-t border-slate-800 py-10 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-slate-500">
+            interns.city — Open-source civic issue tracker for India
+          </p>
+          <a
+            href="mailto:admin@interns.city"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            admin@interns.city
+          </a>
+        </div>
       </footer>
     </div>
   );

@@ -11,6 +11,7 @@ interface PhotoUploadProps {
   onFirstPhoto?: (base64: string, mimeType: string) => void;
   onExifLocation?: (lat: number, lng: number) => void;
   maxPhotos?: number;
+  pathPrefix?: string;
 }
 
 /** Extract GPS coordinates from EXIF data in a JPEG file. */
@@ -107,7 +108,7 @@ function readRationals(view: DataView, offset: number, count: number, le: boolea
   return vals;
 }
 
-export function PhotoUpload({ photos, onChange, onFirstPhoto, onExifLocation, maxPhotos = 4 }: PhotoUploadProps) {
+export function PhotoUpload({ photos, onChange, onFirstPhoto, onExifLocation, maxPhotos = 4, pathPrefix }: PhotoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
@@ -149,7 +150,7 @@ export function PhotoUpload({ photos, onChange, onFirstPhoto, onExifLocation, ma
         reader.readAsDataURL(compressed);
       }
 
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+      const fileName = `${pathPrefix ? pathPrefix + '/' : ''}${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
       const { error } = await supabase.storage
         .from('issue-photos')
         .upload(fileName, compressed, { contentType: 'image/jpeg' });

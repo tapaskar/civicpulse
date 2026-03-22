@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 const EXPECTED_TOPIC_ARN = process.env.AWS_SNS_INBOUND_TOPIC_ARN;
 
-// Extract issue ID from reply+{issueId}@interns.city
+// Extract issue ID from reply+{issueId}@reply.interns.city
 function extractIssueId(recipients: string[]): string | null {
   for (const addr of recipients) {
     const match = addr.match(/reply\+([a-f0-9-]+)@/i);

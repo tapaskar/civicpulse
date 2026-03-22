@@ -14,6 +14,7 @@ import { composeTweetUrl } from '@/lib/social';
 import { useEmailAuthority } from '@/hooks/useEmailAuthority';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthoritiesNotified } from './AuthoritiesNotified';
+import { TweetPreview } from './TweetPreview';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -352,6 +353,17 @@ export function IssueDetail({ issue: initialIssue, onBack }: IssueDetailProps) {
 
           {/* Authorities Notified */}
           <AuthoritiesNotified issueId={issue.id} />
+
+          {/* Tweet Preview */}
+          {user && (
+            <TweetPreview
+              title={issue.title}
+              category={category.label}
+              address={issue.address}
+              twitterHandle={authority?.twitter}
+              issueUrl={issueUrl}
+            />
+          )}
 
           {/* Photos */}
           {issue.photo_urls.length > 0 && (

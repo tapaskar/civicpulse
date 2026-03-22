@@ -195,6 +195,36 @@ RETURNS TABLE (
   LIMIT 100;
 $$ LANGUAGE sql STABLE;
 
+-- Function to get city-wise issue stats using bounding boxes
+CREATE OR REPLACE FUNCTION city_issue_stats()
+RETURNS TABLE (city TEXT, total BIGINT, open_count BIGINT, resolved_count BIGINT) AS $$
+  WITH city_bounds(city, min_lng, min_lat, max_lng, max_lat) AS (
+    VALUES
+      ('Gurugram'::TEXT, 76.85, 28.35, 77.15, 28.55),
+      ('Bangalore', 77.45, 12.85, 77.75, 13.15),
+      ('Delhi', 76.84, 28.40, 77.35, 28.88),
+      ('Noida', 77.28, 28.45, 77.55, 28.68),
+      ('Faridabad', 77.20, 28.30, 77.45, 28.50),
+      ('Hyderabad', 78.30, 17.30, 78.60, 17.55),
+      ('Chennai', 80.10, 12.90, 80.35, 13.20),
+      ('Mumbai', 72.75, 18.85, 73.05, 19.30),
+      ('Pune', 73.75, 18.45, 73.95, 18.65),
+      ('Kolkata', 88.25, 22.45, 88.45, 22.65)
+  )
+  SELECT
+    cb.city,
+    COUNT(*) as total,
+    COUNT(*) FILTER (WHERE i.status = 'open') as open_count,
+    COUNT(*) FILTER (WHERE i.status = 'resolved') as resolved_count
+  FROM issues i
+  JOIN city_bounds cb ON ST_Intersects(
+    i.location,
+    ST_MakeEnvelope(cb.min_lng, cb.min_lat, cb.max_lng, cb.max_lat, 4326)::geography
+  )
+  GROUP BY cb.city
+  ORDER BY total DESC;
+$$ LANGUAGE sql STABLE;
+
 -- Enable Realtime on issues and comments
 ALTER PUBLICATION supabase_realtime ADD TABLE issues;
 ALTER PUBLICATION supabase_realtime ADD TABLE comments;

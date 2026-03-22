@@ -42,6 +42,13 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Protect society manage routes — require authenticated user
+  if (/^\/society\/[^/]+\/manage/.test(pathname)) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/society', request.url));
+    }
+  }
+
   return supabaseResponse;
 }
 

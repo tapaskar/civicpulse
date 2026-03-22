@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from './AuthModal';
-import { Plus, Shield, LogOut, Menu, X, Settings } from 'lucide-react';
+import { Plus, Shield, LogOut, Menu, X, Settings, Mail, Building2 } from 'lucide-react';
 
 export function Navbar() {
   const { user, profile, loading, signOut } = useAuth();
@@ -39,6 +39,22 @@ export function Navbar() {
             }`}>
               Map
             </Link>
+            {user && (
+              <Link href="/society" className={`flex items-center gap-1 text-sm font-medium px-3 py-1.5 rounded-lg transition-all ${
+                isLanding
+                  ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}>
+                <Building2 className="w-3.5 h-3.5" /> Societies
+              </Link>
+            )}
+            <a href="mailto:admin@interns.city" className={`flex items-center gap-1 text-sm font-medium px-3 py-1.5 rounded-lg transition-all ${
+              isLanding
+                ? 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}>
+              <Mail className="w-3.5 h-3.5" /> Contact
+            </a>
 
             {user && (
               <button
@@ -126,6 +142,18 @@ export function Navbar() {
             }`}>
               Map
             </Link>
+            {user && (
+              <Link href="/society" onClick={() => setMobileMenu(false)} className={`flex items-center gap-1.5 text-sm py-2.5 px-3 rounded-lg transition-colors ${
+                isLanding ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' : 'text-gray-300 hover:text-white hover:bg-white/5'
+              }`}>
+                <Building2 className="w-3.5 h-3.5" /> My Societies
+              </Link>
+            )}
+            <a href="mailto:admin@interns.city" onClick={() => setMobileMenu(false)} className={`flex items-center gap-1.5 text-sm py-2.5 px-3 rounded-lg transition-colors ${
+              isLanding ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' : 'text-gray-300 hover:text-white hover:bg-white/5'
+            }`}>
+              <Mail className="w-3.5 h-3.5" /> Contact
+            </a>
             {user && (
               <button
                 onClick={() => { window.dispatchEvent(new CustomEvent('open-report-modal')); setMobileMenu(false); }}
